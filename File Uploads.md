@@ -1,17 +1,6 @@
-Azure-pentest-file-uploads
+# Malicious File Uploads in Azure
 
-# File Upload
-
-Here is a **corrected, summarized, and rewritten version** of your
-content, tailored specifically to **Azure Penetration Testing** and how
-**file upload vulnerabilities** can be discovered and abused in
-Azure-hosted applications:
-
-------------------------------------------------------------------------
-
-**🔐 Azure Penetration Testing: File Upload Vulnerability Cheatsheet**
-
-**📍 Where to Look in Azure Environments**
+**Where to Look in Azure Environments**
 
 File upload vulnerabilities are often found in:
 
