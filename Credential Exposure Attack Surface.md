@@ -1,115 +1,37 @@
-# Azure
+# Credential Exposure Attack Surface
 
-- **App Configuration / Application Settings:** Web apps may store
-  secrets in plain text settings.
+- **App Configuration**: Web apps may store secrets in plain text settings.
+- **Azure Automation**: Credentials hardcoded or improperly secured in scripts.
+- **Azure Functions**: Environment variables or code may contain exposed secrets.
+- **Logic Apps**: Environment variables or code may contain exposed secrets.
+- **Azure Key Vault:** Misconfigured access policies can expose secrets to unauthorized users.
+- **ARM Templates:** Hardcoded secrets in templates or parameter files.
+- **Azure Run Command:** Command history may reveal sensitive credentials.
+- **Blob Storage:** Unsecured or publicly accessible blobs with credential files.
+- **Log Analytics / Diagnostics Logs:** Debug logs may inadvertently capture credentials.
+- **VM Custom Script Extensions:** Scripts with embedded credentials may be stored in plain text.
 
-- **Azure Automation / Runbooks:** Credentials hardcoded or improperly
-  secured in scripts.
-
-- **Azure Functions / Logic Apps:** Environment variables or code may
-  contain exposed secrets.
-
-- **Azure Key Vault:** Misconfigured access policies can expose secrets
-  to unauthorized users.
-
-- **Azure Resource Manager (ARM) Templates:** Hardcoded secrets in
-  templates or parameter files.
-
-- **Azure Run Command:** Command history may reveal sensitive
-  credentials.
-
-- **Blob Storage:** Unsecured or publicly accessible blobs with
-  credential files.
-
-- **Log Analytics / Diagnostics Logs:** Debug logs may inadvertently
-  capture credentials.
-
-- **VM Custom Script Extensions:** Scripts with embedded credentials may
-  be stored in plain text.
-
-| **Location / Feature** | **Path** | **Risk Severity** | **Risk Explanation** |
+| **Service/Feature** | **Path** | **Risk Severity** | **Risk Explanation** |
 |----|----|----|----|
-| **Key Vault** | Azure🡪 Key Vaults 🡪 Vault Name 🡪 Secrets/Keys/Certificates | High | Misconfigured access policies may allow unauthorized access to secrets. |
-| **Custom Script Extension** | Azure🡪 VMs 🡪 VM 🡪 Extensions + applications | High | Scripts with hardcoded credentials are stored on disk, accessible to attackers. |
-| **Run Command** | Azure 🡪 VM 🡪 Run command | High | Secrets may be visible in command logs or audit history. |
-| **App Service Settings** | Azure 🡪 App Services 🡪 Configuration 🡪 Application Settings | Medium | Secrets in environment variables can be exposed via Kudu or code dumps. |
+| **Key Vault** | Key Vaults 🡪 Secrets/Keys/Certificates | High | Misconfigured access policies may allow unauthorized access to secrets. |
+| **Custom Script Extension** | VM 🡪 Extensions + applications | High | Scripts with hardcoded credentials are stored on disk, accessible to attackers. |
+| **Run Command** | VM 🡪 Run command | High | Secrets may be visible in command logs or audit history. |
+| **App Service Settings** | App Services 🡪 Configuration 🡪 Application Settings | Medium | Secrets in environment variables can be exposed via Kudu or code dumps. |
 | **ARM Templates / Parameters** | Deployments or Git Repos 🡪 templates (.json) / parameters (.json) | High | Hardcoded secrets may be exposed in source control or deployment history. |
-| **Log Analytics / Monitor Logs** | Azure Monitor 🡪 Logs / Log Analytics Workspace | Medium | Logs may contain credentials from verbose script output. |
-| **Automation Runbooks** | Azure Automation 🡪 Automation Account 🡪 Runbooks / Credentials | High | Hardcoded credentials or exposed variables in scripts pose leakage risk. |
+| **Log Analytics / Monitor Logs** | Azure Monitor 🡪 Log Analytics Workspace | Medium | Logs may contain credentials from verbose script output. |
+| **Automation Runbooks** | Automation Account 🡪 Runbooks / Credentials | High | Hardcoded credentials or exposed variables in scripts pose leakage risk. |
 | **Azure Functions / Logic Apps** | Function App 🡪 Configuration / Code + Test | High | Environment variables or code may contain secrets directly. |
 | **Azure Blob Storage** | Storage Account 🡪 Containers 🡪 Files | Critical | Credential files may be public or accessible with leaked SAS tokens. |
 
-- **Azure Key Vault**\
-  🔹 *Path:* Azure **Key Vaults**  *Vault Name*  **Secrets / Keys /
-  Certificates**\
-  🔸 *Risk:* Poor access policies (RBAC or Access Policies) may allow
-  unauthorized reads.
-
-- **Custom Script Extension on VMs**\
-  🔹 *Path:* Azure **VMs**  *VM Name*  **Extensions + applications**\
-  🔸 *Risk:* Scripts may contain hardcoded credentials; stored in
-  /var/lib/waagent/ on Linux or C:\Packages\Plugins on Windows.
-
-- **Run Command**\
-  🔹 *Path:* Azure **VMs**  *VM Name*  **Run command**\
-  🔸 *Risk:* Credentials passed via command may be logged in portal or
-  command history.
-
-- **App Service Application Settings**\
-  🔹 *Path:* Azure **App Services**  *App Name*  **Configuration 
-  Application Settings**\
-  🔸 *Risk:* Secrets stored as plain text; accessible via Kudu or
-  environment dump.
-
-- **ARM Templates / Parameters**\
-  🔹 *Path:* Stored in GitHub, DevOps repos, or ARM deployments under
-  **Deployments**\
-  🔸 *Risk:* Hardcoded secrets in JSON/YAML files or deployment history.
-
-- **Azure Monitor Logs / Log Analytics**\
-  🔹 *Path:* Azure **Monitor**  **Logs / Log Analytics Workspaces**\
-  🔸 *Risk:* Secrets may leak via diagnostic/debug logs or output from
-  scripts.
-
-- **Automation Accounts / Runbooks**\
-  🔹 *Path:* Azure **Automation Accounts**  *Account Name* 
-  **Runbooks / Credentials**\
-  🔸 *Risk:* Hardcoded credentials in PowerShell scripts or insecure use
-  of stored credentials.
-
-- **Azure Functions / Logic Apps**\
-  🔹 *Path:* Azure **Function App**  *App Name*  **Configuration** /
-  **Code + Test**\
-  🔸 *Risk:* Secrets in environment variables, inline code, or bindings.
-
-- **Azure Storage (Blobs)**\
-  🔹 *Path:* Azure **Storage Accounts**  *Account Name* 
-  **Containers**\
-  🔸 *Risk:* Blobs with sensitive data may be public or shared with SAS
-  tokens.
-
 # Azure DevOps
 
-- **Artifacts and Logs:** Build/test logs may contain tokens, connection
-  strings, or passwords.
-
-- **Personal Access Tokens (PATs):** Stored or shared insecurely;
-  long-lived PATs increase exposure risk.
-
-- **Pipeline Variables:** Non-secret variables may be used to store
-  credentials in plain text.
-
-- **Pipeline YAML Files:** Hardcoded secrets in source-controlled CI/CD
-  definitions.
-
-- **Secure Files:** Uploaded secrets not encrypted properly or shared
-  broadly.
-
-- **Service Connections:** Improperly scoped or over-permissioned
-  connections.
-
-- **Variable Groups:** Misconfigured access control can lead to
-  credential leaks.
+- **Artifacts and Logs:** Build/test logs may contain tokens, connection strings, or passwords.
+- **Personal Access Tokens (PATs):** Stored or shared insecurely; long-lived PATs increase exposure risk.
+- **Pipeline Variables:** Non-secret variables may be used to store credentials in plain text.
+- **Pipeline YAML Files:** Hardcoded secrets in source-controlled CI/CD definitions.
+- **Secure Files:** Uploaded secrets not encrypted properly or shared broadly.
+- **Service Connections:** Improperly scoped or over-permissioned connections.
+- **Variable Groups:** Misconfigured access control can lead to credential leaks.
 
 | **Location / Feature** | **Path** | **Risk Severity** | **Risk Explanation** |
 |----|----|----|----|
@@ -121,56 +43,11 @@
 | **Build Artifacts & Logs** | Pipelines  Pipeline Run  Logs / Artifacts | Medium | Secrets may leak via debug output or logs. |
 | **Personal Access Tokens (PATs)** | User Settings  Personal Access Tokens | Critical | Compromise of a PAT can grant full access to projects, repos, and pipelines. |
 
-## Pipeline Variables
-
-🔹 *Path:* Azure DevOps  **Pipelines**  *Pipeline Name*  **Edit 
-Variables**\
-🔸 *Risk:* Non-secret variables can store credentials in plain text;
-exposed in logs.
-
-## YAML Pipeline Files
-
-🔹 *Path:* Azure DevOps  **Repos**  *Repo Name* 
-*.azure-pipelines.yml*\
-🔸 *Risk:* Secrets hardcoded in YAML; visible in source control.
-
-## Service Connections
-
-- *Path:* Azure DevOps  **Project Settings**  **Service connections**
-
-- *Risk:* Over-permissioned or outdated connections (e.g., Azure RM,
-  GitHub, DockerHub).
-
-Secure Files
-
-Azure DevOps  **Library**  **Secure files**
-
-*Risk:* Files may contain unencrypted keys or credentials if mishandled.
-
-Variable Groups
-
-*Path:* Azure DevOps  **Library**  **Variable groups**
-
-*Risk:* Secrets stored here if not marked as secret or if permissions
-are too broad.
-
-Build Artifacts / Logs
-
-🔹 *Path:* Azure DevOps  **Pipelines**  *Pipeline Run*  **Logs /
-Artifacts**\
-🔸 *Risk:* Credentials may be leaked through console output or logs.
-
-Personal Access Tokens (PATs)
-
-🔹 *Path:* Azure DevOps  **User Settings**  **Personal Access
-Tokens**\
-🔸 *Risk:* Long-lived PATs or tokens shared insecurely can lead to
-account compromise.
-
 # Credential Storage Best Practices
+
 ## Where to Store Credentials (Secure Storage Options)
 
-**Azure**
+### Azure
 
 | **Method** | **Description** |
 |----|----|
@@ -179,7 +56,7 @@ account compromise.
 | **App Service → Key Vault References** | Use @Microsoft.KeyVault(...) syntax in app settings to securely reference secrets. |
 | **Azure AD Authentication** | Use token-based authentication (OAuth2, MSI) instead of password/API key authentication. |
 
-**Azure DevOps**
+### Azure DevOps
 
 | **Method** | **Description** |
 |----|----|
@@ -190,7 +67,7 @@ account compromise.
 
 ## Where NOT to Store Credentials (Insecure Practices)
 
-**Azure**
+### Azure
 
 | **Insecure Location** | **Why It’s Risky** |
 |----|----|
@@ -201,7 +78,7 @@ account compromise.
 | **Function or Logic App Code** | Secrets in code or bindings can be extracted or reversed. |
 | **Blob Storage (Public/Unsecured)** | Secrets stored in blobs may be accessed via public URLs or misused Shared Access Signatures. |
 
-**Azure DevOps**
+### Azure DevOps
 
 | **Insecure Location** | **Why It’s Risky** |
 |----|----|
@@ -226,9 +103,7 @@ account compromise.
 
 **1. Source Code**
 
-- ❌ Never hardcode credentials in source files (e.g., .py, .js, .sh,
-  etc.).
-
+- ❌ Never hardcode credentials in source files (e.g., .py, .js, .sh, etc.).
 - ❌ Avoid storing credentials in Git repositories, even private ones.
 
 **Example (bad):**
@@ -237,8 +112,7 @@ db_password = "SuperSecret123!"
 
 **2. Configuration Files (Unencrypted)**
 
-- ❌ Avoid storing credentials in plain text .env, .yaml, .json, .ini
-  files without protection.
+- ❌ Avoid storing credentials in plain text .env, .yaml, .json, .ini files without protection.
 
 **Example (bad):**
 
@@ -271,15 +145,10 @@ These are purpose-built tools to store and access secrets securely.
 **🔐 Recommended:**
 
 - **HashiCorp Vault**
-
 - **AWS Secrets Manager**
-
 - **Azure Key Vault**
-
 - **GCP Secret Manager**
-
 - **CyberArk Conjur**
-
 - **1Password CLI or Bitwarden for teams**
 
 These solutions offer encryption at rest, access controls, auditing, and
@@ -287,14 +156,11 @@ rotation features.
 
 **2. Environment Variables (With Limits)**
 
-- ✅ Use **environment variables** to load secrets **at runtime only**,
-  not stored permanently.
+- ✅ Use **environment variables** to load secrets **at runtime only**, not stored permanently.
+- Combine with a secret management tool or container orchestrator like Kubernetes.
 
-- Combine with a secret management tool or container orchestrator like
-  Kubernetes.
-
-export DB_PASSWORD=\$(aws secretsmanager get-secret-value --secret-id
-db_pass --query SecretString --output text)
+    export DB_PASSWORD=\$(aws secretsmanager get-secret-value --secret-id
+    db_pass --query SecretString --output text)
 
 ------------------------------------------------------------------------
 
@@ -419,22 +285,16 @@ db_pass --query SecretString --output text)
 **2. Environment Variables (Runtime Only)**
 
 - ✅ Load secrets into environment variables **at runtime only**.
-
 - ✅ Avoid permanent storage in .env files.
-
 - ✅ Use secret managers or container orchestration tools (Kubernetes,
   Docker Secrets) to inject securely.
 
 **3. CI/CD Secret Management**
 
 - ✅ Use built-in secret stores for CI/CD pipelines:
-
   - GitHub Actions → Encrypted Secrets
-
   - GitLab CI → Protected Variables
-
   - Jenkins → Credentials Plugin
-
   - CircleCI → Environment Variables
 
 **4. Encrypted Configuration Files**
@@ -442,9 +302,7 @@ db_pass --query SecretString --output text)
 - ✅ If config files are necessary, **encrypt them** using:
 
   - **Mozilla SOPS**
-
   - **Ansible Vault**
-
   - **age** or **GPG**
 
   - Cloud KMS (AWS KMS, Azure Key Vault, GCP KMS)
@@ -452,11 +310,8 @@ db_pass --query SecretString --output text)
 **5. OS Keychains**
 
 - ✅ Use system-level secure storage:
-
   - **macOS Keychain**
-
   - **Windows Credential Manager**
-
   - **Linux Keyring (GNOME, KWallet)**
 
 ------------------------------------------------------------------------
@@ -464,17 +319,11 @@ db_pass --query SecretString --output text)
 **🛡️ Security Operations Best Practices**
 
 - ✅ Use **access controls (RBAC)** to limit who can access secrets.
-
 - ✅ Monitor and alert on unusual access or secret usage.
-
 - ✅ Store secret metadata (who created, when, purpose).
-
 - ✅ Regularly audit and remove unused or stale secrets.
-
 - ✅ Use **zero-trust principles** in secret access and handling.
-
-- ✅ Ensure **backup and recovery** procedures include secure secrets
-  recovery.
+- ✅ Ensure **backup and recovery** procedures include secure secrets   recovery.
 
 ## Credential Storage Best Practices Checklist
 
@@ -515,8 +364,3 @@ db_pass --query SecretString --output text)
 | 🛠️ Incident History | Review any past credential leaks or incidents, and mitigation steps | ☐ |
 | 🧩 3rd Party Access | Review secrets shared with or accessed by vendors/partners | ☐ |
 | 📚 Documentation | Ensure secret ownership and handling procedures are documented | ☐ |
-
-------------------------------------------------------------------------
-
-Let me know if you'd like this exported as a CSV, PDF, or ready-to-use
-policy document.
