@@ -137,19 +137,11 @@ These Azure operations can return **sensitive credentials**, **secrets**, or **a
 
 **📦 Containers & Compute**
 
-- **Azure Container Instances / AKS Env Leak**
-  - Environment variables may hold credentials (e.g., AZURE_CLIENT_SECRET).
-
-- **Function Apps / Logic Apps**
-  - May expose credentials or hardcoded secrets in source or via
-    /admin/token.
+- **Azure Container Instances / AKS Env Leak**: Environment variables may hold credentials (e.g., AZURE_CLIENT_SECRET).
+- **Function Apps / Logic Apps**: May expose credentials or hardcoded secrets in source or via /admin/token.
 
 **🧪 Other Abuse Vectors**
 
-- **Azure DevOps PAT Leakage**
-  - Abuse pipeline variables or endpoints to dump Personal Access
-    Tokens.
-- **Storage Account Shared Access Signature (SAS) Tokens**
-  - Misconfigured SAS URLs can expose sensitive blobs or file shares.
-- **Azure SQL or Cosmos DB with leaked connection strings**
-  - Abuse cleartext creds in config or key vault.
+- **Azure DevOps PAT Leakage**: Abuse pipeline variables or endpoints to dump Personal Access     Tokens.
+- **Storage Account Shared Access Signature (SAS) Tokens**: Misconfigured SAS URLs can expose sensitive blobs or file shares.
+- **Azure SQL or Cosmos DB with leaked connection strings**: Abuse cleartext creds in config or key vault.
