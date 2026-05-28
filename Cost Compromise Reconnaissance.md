@@ -1,23 +1,15 @@
-## Post Compromise
-
-**Post-Compromise Recon in Azure Penetration Testing**
+# Post Compromise Reconnaissance
 
 After successfully compromising an Azure environment, the
 post-compromise recon phase is crucial for understanding the scope of
 your access and identifying potential paths to escalate privileges or
 exfiltrate data.
 
-**1. Who Do We Have Access As?**
+**1. Who do we have access as?**
 
-- **Roles and Permissions**: Determine the roles assigned to the
-  compromised account. For example, are you a standard user, or do you
-  have privileged access like a contributor or admin? Understanding the
-  access control policies and group memberships is key to escalating
-  privileges.
+- **Roles and Permissions**: Determine the roles assigned to the compromised account. For example, are you a standard user, or do you have privileged access like a contributor or admin? Understanding the access control policies and group memberships is key to escalating privileges.
 
-- **Multi-Factor Authentication (MFA)**: Verify if MFA is enabled for
-  the compromised account. If it’s not, this could be an area of
-  exploitation.
+- **Multi-Factor Authentication (MFA)**: Verify if MFA is enabled for the compromised account. If it’s not, this could be an area of exploitation.
 
 - **Accessible Resources**: Check what resources you can access within
   the Azure environment (web apps, databases, storage accounts, etc.).
