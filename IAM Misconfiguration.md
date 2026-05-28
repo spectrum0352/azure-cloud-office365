@@ -109,39 +109,17 @@ Unlike AWS, Azure does not use prefix-based identifiers for identities. Instead,
 
 These Azure operations can return **sensitive credentials**, **secrets**, or **access tokens** if misconfigured or abused during post-exploitation:
 
-## Azure Resource Management (ARM) & Identity
-
-- **Managed Identity Token Retrieval**
-  - Abuse of [Azure Instance Metadata Service (IMDS)](http://169.254.169.254/metadata/identity/oauth2/token) to extract access tokens for Managed Identities.
-  - Often via SSRF, RCE, or open proxy.
-- **Azure AD OAuth2 Token Leaks**: APIs using oauth2/token endpoints can return access_token when scoped with correct resource (e.g., https://management.azure.com/).
+- **Managed Identity Token Retrieval**: Abuse of [Azure Instance Metadata Service (IMDS)](http://169.254.169.254/metadata/identity/oauth2/token) to extract access tokens for Managed Identities via SSRF, RCE, or open proxy.
+- **Microsoft Entra OAuth2 Token Leaks**: APIs using oauth2/token endpoints can return access_token when scoped with correct resource (e.g., https://management.azure.com/).
 - **Service Principal Credential Dumping**: If compromised or misconfigured, secrets for SPNs can be pulled from Key Vaults or environment variables.
-
-
-- **🔐 Identity & Access**
-
-- **Azure AD SSO Token Extraction**: If browser sessions or token caches (e.g., MSAL/ADAL) are accessible via local compromise.
+- **Microsoft Entra SSO Token Extraction**: If browser sessions or token caches (e.g., MSAL/ADAL) are accessible via local compromise.
 - **Privileged Role Assignment via Microsoft Graph API**: Abuse of RoleAssignmentScheduleRequests to assign roles and generate access.
-- **Azure AD Token Replay via sts/tokenorassertion injection**: Leverage access_token, id_token, or refresh_token leaks for session hijack.
-
-**💾 Secrets & Credential Services**
-
-- **Azure Key Vault: GetSecret / ListSecrets**
-  - Leaks API keys, passwords, or connection strings.
-  - Requires Secret Reader role or misconfigured access policies.
-- **Azure Automation Account Credential Access**
-  - Dump credentials stored in Automation Runbooks or Variables.
-- **Azure App Service AppSettings Dump**
-  - Environment variables may contain connection strings and
-    credentials.
-
-**📦 Containers & Compute**
-
+- **Microsoft Entra Token Replay via sts/tokenorassertion injection**: Leverage access_token, id_token, or refresh_token leaks for session hijack.
+- **Azure Key Vault (GetSecret / ListSecrets)**: Leaks API keys, passwords, or connection strings This requires Secret Reader role or misconfigured access policies.
+- **Azure Automation Account Credential Access**: Dump credentials stored in Automation Runbooks or Variables.
+- **Azure App Service AppSettings Dump**: Environment variables may contain connection strings and  credentials.
 - **Azure Container Instances / AKS Env Leak**: Environment variables may hold credentials (e.g., AZURE_CLIENT_SECRET).
 - **Function Apps / Logic Apps**: May expose credentials or hardcoded secrets in source or via /admin/token.
-
-**🧪 Other Abuse Vectors**
-
 - **Azure DevOps PAT Leakage**: Abuse pipeline variables or endpoints to dump Personal Access     Tokens.
 - **Storage Account Shared Access Signature (SAS) Tokens**: Misconfigured SAS URLs can expose sensitive blobs or file shares.
 - **Azure SQL or Cosmos DB with leaked connection strings**: Abuse cleartext creds in config or key vault.
