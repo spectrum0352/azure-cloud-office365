@@ -168,11 +168,6 @@ Tokens**\
 account compromise.
 
 # Credential Storage Best Practices
-
-Here’s a summary of **Credential Storage Best Practices** for both
-**Azure** and **Azure DevOps**, specifying **where not to store** and
-**where to store** credentials securely.
-
 ## Where to Store Credentials (Secure Storage Options)
 
 **Azure**
