@@ -124,7 +124,6 @@ be used during offensive testing to evaluate detection coverage.
 | **Alert exists for VNet or Subnet changes** | Activity Logs | Monitor: Microsoft.Network/virtualNetworks/write | Alert on VNet modifications |
 | **Alert exists for Route Table updates** | Activity Logs | Monitor: Microsoft.Network/routeTables/write | Alert triggered when routes are modified |
 
-
 ## Billing and Contact integrity
 
 - Enable Cost Management Alerts: Set up budgets and alerts for cost spikes.
