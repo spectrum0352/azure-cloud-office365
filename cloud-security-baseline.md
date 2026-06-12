@@ -3,29 +3,21 @@
 Penetration testing on Cloud environments
 
 - Scope & Access will be more limited.
-
 - Spell out enforced limitations in your reporting
-
 - Cloud providers typically require an approval process be followed
 
 Attacking Azure, AWS, or Google Cloud Deployments
 
 - Requires preapproval by account owner (Azure and AWS)
-
 - Standard Rules of Engagement stuff
-
 - Limited to customer owned resources
-
 - No DoS
-
 - Can include attempts to break isolation (Azure)
 
 Where is the data?
 
 - Cloud services rely on data storage for nearly everything
-
 - How is data stored in the cloud?
-
 - Do I need to attack the service or is the data my real goal?
 
 Pathfinding, recon, and targeting in multiple dimension
@@ -35,7 +27,6 @@ Pathfinding, recon, and targeting in multiple dimension
 ## Path finding
 
 Identifying Cloud Deployments
-
 In the public cloud, DNS is your best friend
 
 <img src="media/image1.png" style="width:4.3782in;height:2.35915in" />
@@ -287,8 +278,7 @@ auditing configurations are essential for mitigating these risks.
 
 - **Get-AzAutomationAccount, Get-AzAutomationRunbook:**
 
-  - Azure Automation Runbooks can contain sensitive information or be
-    used for malicious purposes. Enumerating them is essential.
+  - Azure Automation Runbooks can contain sensitive information or be used for malicious purposes. Enumerating them is essential.
 
   - Export-AzAutomationRunbook can extract the code of the runbook for
     offline analysis.
@@ -340,24 +330,14 @@ auditing configurations are essential for mitigating these risks.
 
 - **Invoke-AzVMRunCommand:**
 
-  - This command allows you to execute commands on Azure VMs, which can
-    be used for various purposes, including privilege escalation, data
-    exfiltration, and installing backdoors.
-
-  - Using PowerShell scripts with this command provides a powerful way
-    to automate malicious actions.
+  - This command allows you to execute commands on Azure VMs, which can be used for various purposes, including privilege escalation, data exfiltration, and installing backdoors.
+  - Using PowerShell scripts with this command provides a powerful way to automate malicious actions.
 
 - **Creating Service Principals as Backdoors:**
 
-  - The commands provided for creating a service principal with the
-    "Owner" role are a classic example of creating a persistent
-    backdoor.
-
-  - This allows an attacker to maintain access to the Azure environment
-    even if the initial compromised account is remediated.
-
-  - The MSOL portion of the service principal creation allows for
-    increased permissions within the O365 environment.
+  - The commands provided for creating a service principal with the "Owner" role are a classic example of creating a persistent backdoor.
+  - This allows an attacker to maintain access to the Azure environment even if the initial compromised account is remediated.
+  - The MSOL portion of the service principal creation allows for increased permissions within the O365 environment.
 
 - **SQL Server Manipulation:**
 
@@ -366,41 +346,23 @@ auditing configurations are essential for mitigating these risks.
 
 **Ethical Considerations:**
 
-- It is crucial to emphasize that these commands should only be used in
-  authorized penetration testing engagements.
-
+- It is crucial to emphasize that these commands should only be used in authorized penetration testing engagements.
 - Unauthorized use of these commands is illegal and unethical.
+- When performing penetration testing, it is essential to have a clear scope of work and obtain explicit permission from the target organization.
 
-- When performing penetration testing, it is essential to have a clear
-  scope of work and obtain explicit permission from the target
-  organization.
-
-- When bypassing MFA, or utilizing stolen credentials, extra care must
-  be taken to ensure that the testing is being performed within the
-  agreed upon scope.
+- When bypassing MFA, or utilizing stolen credentials, extra care must be taken to ensure that the testing is being performed within the agreed upon scope.
 
 **Key Takeaways for Penetration Testing:**
 
-- **Automation:** PowerShell scripts can be used to automate many of
-  these commands, making reconnaissance and exploitation more efficient.
+- **Automation:** PowerShell scripts can be used to automate many of these commands, making reconnaissance and exploitation more efficient.
+- **Privilege Escalation:** Pay close attention to role assignments and identify opportunities to escalate privileges.
+- **Persistence:** Focus on establishing persistent access, such as by creating service principals or modifying SQL Server configurations.
+- **Data Exfiltration:** Look for ways to exfiltrate sensitive data, such as through storage accounts or SQL databases.
+- **Defense Evasion:** Be aware of Azure and O365 security controls and develop techniques to bypass them.
 
-- **Privilege Escalation:** Pay close attention to role assignments and
-  identify opportunities to escalate privileges.
-
-- **Persistence:** Focus on establishing persistent access, such as by
-  creating service principals or modifying SQL Server configurations.
-
-- **Data Exfiltration:** Look for ways to exfiltrate sensitive data,
-  such as through storage accounts or SQL databases.
-
-- **Defense Evasion:** Be aware of Azure and O365 security controls and
-  develop techniques to bypass them.
-
-By understanding how to use these commands, penetration testers can
-effectively assess the security of Azure and O365 environments.
+By understanding how to use these commands, penetration testers can effectively assess the security of Azure and O365 environments.
 
 ## Cloud PenTest Tools
 
 Catalogs: Nessus, Metasploit
-
 Pinpoint: nmap, ettercap, hping3, curl, tcpreplay
