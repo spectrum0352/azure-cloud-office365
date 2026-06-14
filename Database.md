@@ -1,7 +1,11 @@
 # Azure Database
 
-**Azure Penetration Testing** on **Azure Database Services** (Azure SQL,
-MySQL, PostgreSQL, etc.).
+**Azure Penetration Testing** on **Azure Database Services** (Azure SQL, MySQL, PostgreSQL, etc.).
+
+Why are so many Azures Cosmos DB breached?
+
+What are the advantages of cloud-based databases?
+
 
 # Azure Database Services 
 

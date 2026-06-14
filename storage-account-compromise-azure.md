@@ -1,9 +1,18 @@
 # Azure Storage Account
 
-Here is a **summarized, corrected, and rewritten version** of the
-original AWS S3 exploitation overview, adapted for **Azure Penetration
-Testing**, focusing on **Azure Blob Storage** (Azure’s equivalent to
-S3):
+## Why are so many Storage accounts breached?
+
+Here are the key points about why Azure Storage accounts can be breached:
+
+- **Human Errors**:
+  - Unintentional public access: Misconfigured permissions or settings can expose data.
+  - Incorrectly placed sensitive information: Storing sensitive data in public buckets.
+  - Lack of security knowledge: Users may not fully understand security features.
+- **Configuration Mistakes**:
+  - Exposing data unintentionally: Incorrectly configuring access to storage objects.
+  - Uploading sensitive content: Adding sensitive data to publicly accessible containers.
+
+To mitigate risks, follow best practices, enable Microsoft Defender for storage, and regularly assess security.
 
 ------------------------------------------------------------------------
 

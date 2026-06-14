@@ -55,15 +55,6 @@ While both cloud and on-premises environments require robust security measures, 
 
 - **On-premises:** Security controls can be more focused on the physical perimeter and internal network.
 
-### Specific Control Differences
-
-| **Security Control** | **Cloud** | **On-premises** |
-|----|----|----|
-| Network Segmentation | Virtual Networks (VNETs), subnets, NSGs | Physical network segmentation, firewalls |
-| IAM | Cloud-based identity providers, role-based access control | On-premises identity stores, access controls |
-| Data Protection | Encryption, key management, data loss prevention | Encryption, backup, access controls |
-| Threat Detection and Response | Cloud-native SIEM, threat intelligence | Traditional SIEM, intrusion detection systems |
-
 In summary, while the fundamental principles of security remain consistent, the cloud introduces unique challenges and opportunities. By understanding these differences, organizations can effectively protect
 their assets in both environments.
 
@@ -77,70 +68,27 @@ their assets in both environments.
 
 Shared Responsibility Model:
 
-The shared responsibility model in cloud computing defines the security
-responsibilities between the cloud provider and the customer.
-Essentially, the provider is responsible for securing the
-*infrastructure* (the "cloud itself"), while the customer is responsible
-for securing *what they put in the cloud* (data, applications, operating
-systems, network configurations). The specific division of
-responsibility varies depending on the service model (IaaS, PaaS, SaaS).
+The shared responsibility model in cloud computing defines the security responsibilities between the cloud provider and the customer. Essentially, the provider is responsible for securing the *infrastructure* (the "cloud itself"), while the customer is responsible for securing *what they put in the cloud* (data, applications, operating systems, network configurations). The specific division of responsibility varies depending on the service model (IaaS, PaaS, SaaS).
 
-- **IaaS (Infrastructure as a Service):** The provider manages the
-  physical infrastructure (servers, networking, storage). The customer
-  is responsible for securing everything else, including operating
-  systems, applications, and data.
+- **IaaS (Infrastructure as a Service):** The provider manages the physical infrastructure (servers, networking, storage). The customer is responsible for securing everything else, including operating systems, applications, and data.
+- **PaaS (Platform as a Service):** The provider manages the underlying infrastructure and the platform (operating systems, middleware). The customer is responsible for securing their applications and data.
+- **SaaS (Software as a Service):** The provider manages everything, including the application, infrastructure, and data. The customer's responsibility is limited to managing user accounts and data within the application.
 
-- **PaaS (Platform as a Service):** The provider manages the underlying
-  infrastructure and the platform (operating systems, middleware). The
-  customer is responsible for securing their applications and data.
+## Public vs. Private Cloud Considerations
 
-- **SaaS (Software as a Service):** The provider manages everything,
-  including the application, infrastructure, and data. The customer's
-  responsibility is limited to managing user accounts and data within
-  the application.
+When choosing between public and private cloud, key considerations include:
 
-Public vs. Private Cloud Considerations
-
-When choosing between public and private cloud, key considerations
-include:
-
-- **Cost:** Public cloud often has lower upfront costs and operates on a
-  pay-as-you-go model. Private cloud requires significant capital
-  expenditure for hardware and infrastructure.
-
-- **Scalability:** Public cloud offers greater scalability and
-  elasticity, allowing resources to be easily scaled up or down as
-  needed. Private cloud scalability can be more limited and require
-  planning.
-
-- **Security:** While public cloud providers invest heavily in security,
-  the shared responsibility model means you're still responsible for
-  securing your own data and applications. Private cloud offers more
-  control over security, but it's your responsibility entirely.
-
-- **Control:** Private cloud provides greater control over
-  infrastructure and customization. Public cloud offers less control but
-  simplifies management.
-
-- **Compliance:** Certain industries with strict regulatory requirements
-  may lean towards private cloud for greater control over data
-  governance. Public cloud providers offer various compliance
-  certifications, but you must still ensure your usage meets those
-  standards.
-
-- **Management:** Public cloud often simplifies management with
-  provider-managed services. Private cloud requires dedicated IT staff
-  for maintenance and administration.
-
-- **Availability/Reliability:** Both public and private cloud can offer
-  high availability, but public cloud providers often have more robust
-  infrastructure.
+- **Cost:** Public cloud often has lower upfront costs and operates on a pay-as-you-go model. Private cloud requires significant capital expenditure for hardware and infrastructure.
+- **Scalability:** Public cloud offers greater scalability and elasticity, allowing resources to be easily scaled up or down as needed. Private cloud scalability can be more limited and require planning.
+- **Security:** While public cloud providers invest heavily in security, the shared responsibility model means you're still responsible for securing your own data and applications. Private cloud offers more control over security, but it's your responsibility entirely.
+- **Control:** Private cloud provides greater control over infrastructure and customization. Public cloud offers less control but simplifies management.
+- **Compliance:** Certain industries with strict regulatory requirements may lean towards private cloud for greater control over data governance. Public cloud providers offer various compliance certifications, but you must still ensure your usage meets those   standards.
+- **Management:** Public cloud often simplifies management with provider-managed services. Private cloud requires dedicated IT staff for maintenance and administration.
+- **Availability/Reliability:** Both public and private cloud can offer high availability, but public cloud providers often have more robust infrastructure.
 
 Cloud Environment Security Monitoring Tools:
 
-- Examples: Microsoft Defender for Cloud, Azure Security Center, AWS
-  CloudTrail, Google Cloud Security Command Center. (These are examples;
-  there are many others.)
+- Examples: Microsoft Defender for Cloud, Azure Security Center, AWS CloudTrail, Google Cloud Security Command Center. (These are examples; there are many others.)
 
 Advantages of Cloud-Based Databases:
 
@@ -151,7 +99,7 @@ Advantages of Cloud-Based Databases:
 - Security: Cloud providers invest heavily in security measures.
 - Automation: Streamlined maintenance and updates.
 
-## Security of the Cloud 
+## Security of the Cloud New
 
 - Physical Security (Facility/Datacentres)
 - Hardware Security
@@ -240,10 +188,7 @@ VM escape protection techniques
 
 ## Business Continuity
 
-**Business Continuity Plan:** A playbook to address large scale
-failures. The goal is to get key people & processes up and running for
-business to resume within an acceptable amount of time. Business
-continuity within Cloud provider:
+**Business Continuity Plan:** A playbook to address large scale failures. The goal is to get key people & processes up and running for business to resume within an acceptable  amount of time. Business continuity within Cloud provider:
 
 - Backup Cloud configurations & Infrastructure as Code
 - Adapt the architecture to leverage provider resiliency
@@ -371,37 +316,6 @@ to strict regulatory compliance standards.
 - Collaboration between security and development teams is crucial.
 - Regular security assessments and audits are vital for maintaining a strong security posture.
 
-### Would you like to delve deeper into a specific aspect of this solution or explore another challenge?
-
-### What are things to take into consideration when using public cloud instead of private?
-
-When deciding between a public and private cloud, consider the following factors:
-
-- **Cost**
-  - **Capital Expenditure (CapEx):** Public cloud often requires minimal upfront investment.  
-  - **Operational Expenditure (OpEx):** Pay-per-use model in public cloud can be more cost-effective for variable workloads.  
-- **Scalability**
-  - **Elasticity:** Public clouds offer rapid scalability to handle fluctuating workloads.  
-  - **Resource Availability:** Public cloud providers often have vast resources available.
-- **Security**
-  - **Shared Responsibility Model:** Understand the security responsibilities between you and the cloud provider.  
-  - **Compliance:** Ensure the cloud provider meets your industry-specific compliance requirements.
-  - **Data Residency:** Consider data sovereignty regulations if applicable.
-- **Control**
-  - **Customization:** Public clouds offer varying degrees of customization, but generally less control than private clouds.
-  - **Governance:** Establish clear governance policies for cloud usage.
-- **Performance**
-  - **Network Latency:** Evaluate network performance based on your application requirements.
-  - **Region Selection:** Choose cloud regions strategically to minimize latency.
-- **Vendor Lock-In**
-  - **Dependency:** Evaluate the potential for vendor lock-in and develop exit strategies.
-- **Other Factors**
-  - **Expertise:** Assess your team's cloud expertise and the need for additional resources.
-  - **Regulatory Compliance:** Ensure the cloud provider meets your industry-specific compliance requirements.
-  - **Disaster Recovery:** Evaluate the cloud provider's disaster recovery capabilities.
-
-By carefully considering these factors, you can make an informed decision about whether a public cloud is the right choice for your organization.
-
 ## What is the advantage of API over forward proxy?
 
 - **API (Application Programming Interface)** and **Forward Proxy** are often compared, but they serve distinct purposes.
@@ -438,61 +352,6 @@ In summary, APIs provide a more structured, secure, and flexible approach to dat
   - **Applications:** Responsibility depends on the cloud service model.
 
 > It is essential to understand the shared responsibility model for your specific cloud service to ensure adequate security measures are in place.  
-
-## Why are so many Storage accounts breached?
-
-Here are the key points about why Azure Storage accounts can be breached:
-
-- **Human Errors**:
-  - Unintentional public access: Misconfigured permissions or settings can expose data.
-  - Incorrectly placed sensitive information: Storing sensitive data in public buckets.
-  - Lack of security knowledge: Users may not fully understand security features.
-- **Configuration Mistakes**:
-  - Exposing data unintentionally: Incorrectly configuring access to storage objects.
-  - Uploading sensitive content: Adding sensitive data to publicly accessible containers.
-
-To mitigate risks, follow best practices, enable Microsoft Defender for storage, and regularly assess security.
-
-## Why are the containers vulnerable?
-
-Containers can be vulnerable due to several factors:
-
-1. **Misconfigurations**: Incorrectly set permissions or overly permissive access controls can expose sensitive data.
-2. **Outdated Software**: Running outdated container images with known vulnerabilities can lead to exploitation.
-3. **Insecure Images**: Using untrusted or poorly maintained images can introduce security risks.
-4. **Runtime Vulnerabilities**: Containers share the host OS kernel, so any kernel vulnerabilities affect all containers.
-5. **Lack of Monitoring**: Inadequate monitoring and logging make it harder to detect and respond to threats.
-
-To enhance container security, follow best practices, regularly update images, and monitor for anomalies.
-
-## Why did you choose your career in cloud computing?
-
-As an AI language model, I do not have personal experiences or career choices, but I can certainly share insights! Cloud computing has indeed become a critical part of modern technology. Here are some reasons why
-it’s a popular career choice:
-
-1. **Market Demand**: The rapid adoption of cloud services by businesses has created a high demand for skilled professionals. Organizations need experts to design, deploy, and manage cloud infrastructure.
-2. **Scalability and Flexibility**: Cloud platforms allow businesses to scale resources up or down based on demand. This flexibility attracts professionals who enjoy working with dynamic environments.
-3. **Innovation**: Cloud providers constantly introduce new services and features. Cloud professionals get to work on cutting-edge technologies, from serverless computing to machine learning.
-4. **Cost Efficiency**: Cloud computing reduces the need for on-premises hardware and maintenance costs. Professionals who can optimize cloud spending are highly valued.
-5. **Security and Compliance**: Ensuring data security and compliance is crucial. Cloud security specialists play a vital role in protecting sensitive information.
-6. **Remote Work Opportunities**: Cloud roles often allow remote work, providing work-life balance and flexibility.
-
-In summary, cloud computing offers exciting challenges, career growth, and the chance to shape the future of technology. 😊
-
-## Why does it take so long for organizations to move their workloads to the cloud?
-
-Migrating workloads to the cloud is indeed a significant undertaking, and several challenges contribute to the time it takes. Here are some common reasons:
-
-1. **Lack of Cloud Migration Strategy**: Organizations often dive into migration without a well-defined strategy. A clear plan helps mitigate risks and ensures a smoother transition.
-2. **Infrastructure Compatibility**: Ensuring that existing applications and systems are compatible with cloud environments can be complex. Dependencies, legacy code, and custom configurations need careful   consideration.
-3. **Cost Optimization**: Balancing cost and performance in the cloud can be tricky. Organizations must optimize resource usage, choose the right pricing models, and avoid unexpected expenses.
-4. **Data Security and Compliance**: Protecting sensitive data during migration is crucial. Compliance with industry standards and regulations adds complexity.
-5. **Application Compatibility**: Some applications may not seamlessly transition to the cloud due to differences in architecture or dependencies. Testing and adjustments are necessary
-6. **Data Migration Challenges**: Transferring large volumes of data can be time-consuming. Ensuring data integrity and minimizing downtime are critical
-7. **Network Bottlenecks**: Moving data across networks can be slow, especially for large workloads. Optimizing network connectivity is essential
-8. **Organizational Change Management**: Shifting to the cloud requires buy-in from stakeholders, training, and adjusting workflows. Change management takes time
-
-In summary, a thoughtful approach, addressing technical and organizational aspects, and understanding these challenges contribute to successful cloud migrations.
 
 ## What are the Security Considerations in Cloud?
 
@@ -747,34 +606,6 @@ optimizing your cloud security posture.
 
 #### What are things to take into consideration when using public cloud instead of private?
 
-#### When deciding between public and private cloud, several factors need careful consideration:
-
-- **Security and Compliance:**
-  - **Data Sensitivity:** If your data is highly sensitive, a private cloud might offer more granular control and security measures.
-  - **Compliance Requirements:** Evaluate whether public cloud providers meet your specific industry regulations (e.g., HIPAA, GDPR, PCI DSS).
-  - **Data Residency:** Consider data sovereignty and compliance needs. Some regulations mandate data storage within specific geographic locations.
-- **Cost:**
-  - **Scalability:** Public clouds often offer pay-as-you-go pricing models, making them cost-effective for variable workloads.
-  - **Initial Investment:** Private clouds require significant upfront investments in hardware, software, and infrastructure.
-  - **Operational Costs:** Public clouds can reduce ongoing operational costs, such as maintenance and management.
-- **Control and Customization:**
-  - **Customization:** Private clouds offer greater customization and control over the underlying infrastructure.
-  - **Vendor Lock-in:** Evaluate the potential for vendor lock-in with public cloud providers.
-  - **Integration:** Consider the complexity of integrating existing systems and applications with public cloud services.
-- **Performance and Reliability:**
-  - **Network Latency:** Assess network latency and performance requirements for your applications. Public cloud providers often have global infrastructure, but performance might vary based on geographic location.
-  - **Service Level Agreements (SLAs):** Review SLAs offered by public cloud providers to ensure they meet your business needs.
-  - **Disaster Recovery:** Evaluate the disaster recovery and business continuity capabilities of public cloud providers.
-- **Expertise and Resources:**
-  - **In-house Expertise:** Assess your team's expertise in managing cloud infrastructure and applications.
-  - **Cloud Provider Support:** Evaluate the level of support and expertise provided by public cloud providers.
-- **Additional Considerations:**
-  - **Data Migration:** Consider the complexity and cost of migrating your existing data and applications to the public cloud.
-  - **Security Best Practices:** Implement robust security practices, including encryption, access controls, and regular security audits.
-  - **Continuous Monitoring:** Monitor your cloud environment closely to detect and respond to security threats.
-
-Ultimately, the decision to choose public or private cloud depends on your specific business needs, risk tolerance, and budget constraints.
-
 1. **What kind of systems or network do you have at home or in the cloud for security research?**
 
 A serious security professional typically has a robust home lab with multiple systems running various operating systems. This allows for hands-on experimentation and the development of practical security skills. Have you ever been called to investigate a compromised network? How did you approach the situation? A good response would demonstrate a systematic approach to troubleshooting and a deep understanding of network security principles.
@@ -794,19 +625,12 @@ Microsoft Defender for Cloud App
 
 Cloud network traffic creates new visibility challenges. You might think that by moving workloads to a cloud IaaS (Infrastructure-as-a-Service) platform, that you have completely outsourced your infrastructure layers, including the network side, and do not need cloud performance monitoring. You might also assume that since you are not managing the physical hardware, you do not need to monitor network traffic1. However, monitoring cloud network traffic is important because it can help you identify hot spots and secure your network.
 
-## What solution is used to check the compliance of apps? Microsoft Defender for Cloud App**
+## What are cloud platform security policies you designed or developed?
 
-What are cloud platform security policies you designed or developed?
+## What are the a few security software tools that can help you monitor cloud environments?
 
-What are the a few security software tools that can help you monitor cloud environments?
+## What technologies and approaches are used to secure information and services deployed on cloud computing infrastructure?
 
-What are the advantages of cloud-based databases?
-
-**What technologies and approaches are used to secure information and services deployed on cloud computing infrastructure?**
-
-**What technologies are used to secure information and services deployed on cloud computing infrastructure?**
-
-**What are things to take into consideration when using public cloud instead of private?**
 
 How Azure Firewall Manager helps to manage firewalls**?**
 
@@ -844,15 +668,7 @@ What azure solution can be used for anomaly detection to identify threat?
 
 What information security challenges are faced in a cloud computing environment?
 
-What is the design and assessment of Azure Key Vault?
 
-What is the design and assessment of MDC?
-
-What is the design and assessment of Sentinel?
-
-What is Virtualization? What are the security risks in it?
-
-What is virtualized environment?
 
 What security challenges do unified communications present?
 
@@ -860,20 +676,5 @@ What special security challenges do SOA present?
 
 What technologies and approaches are used to secure information and services deployed on cloud computing infrastructure?  
 
-What technologies are used to secure information and services deployed on cloud computing infrastructure?
-
-What will be your priorities if you were to start a job as Cloud security engineer at company due to previous guy being fired for incompetence?
-
-Why are so many Azures Cosmos DB breached?
-
 Why is it so hard to monitor cloud traffic from the network?
-
-Briefly explain the relation of Azure AD with subscriptions?
-
 Can a child domain be created under managed domain services?
-
-Can the on-premises applications be added?
-
-Can the tenant id and client id be hideable in the body or headers in Azure AD?
-
-Define dynamic groups in Azure AD?

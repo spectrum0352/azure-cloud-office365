@@ -1,46 +1,42 @@
-# Azure security validation process: define and implement
+# Azure security assessment process
 
-To define and implement an Azure security validation process, you can follow these steps:
+To define and implement an Azure security assessment process, you can follow these steps:
 
- 1. Identify your assets and risks. This includes identifying all of the Azure resources that you have as well as the potential risks to those resources. You can use tools like Azure Security Center to help you with this process.
- 2. Define your security requirements. This includes defining the security controls that you need in place to protect your assets and mitigate the risks that you have identified. You can use Azure Security Benchmark to help you with this process.
- 3. Implement your security requirements. This includes configuring Azure services and deploying security tools to implement the security controls that you have defined.
+1. Identify your assets and risks
+2. Define your security requirements
+3. Implement your security requirements
+4. Validate your security controls
+5. Monitor and improve your security posture
 
-4.  Validate your security controls. This includes testing your security
-    controls to ensure that they are working as expected. You can use
-    tools like Azure Security Center and Azure Sentinel to help you with
-    this process.
+## Identify your assets and risks
 
-5.  Monitor and improve your security posture. This includes monitoring
-    your Azure resources for suspicious activity and regularly reviewing
-    and updating your security requirements.
-
-Here are some specific tips for implementing each step:
-
-Identify your assets and risks.
-
+- This includes identifying all of the Azure resources that you have as well as the potential risks to those resources. You can use tools like Azure Security Center to help you with this process.
 - Use Azure Resource Graph to query for all of the Azure resources in your subscription.
 - Use Azure Security Center to identify potential security risks to your resources.
 - Use Azure Sentinel to identify potential security incidents.
 
-Define your security requirements.
+## Define your security requirements
 
+- This includes defining the security controls that you need in place to protect your assets and mitigate the risks that you have identified. You can use Azure Security Benchmark to help you with this process.
 - Use Azure Security Benchmark to identify the security controls that you need in place to protect your assets and mitigate the risks that you have identified.
 - Use Azure Policy to define and enforce security policies for your Azure resources.
 
-Implement your security requirements.
+## Implement your security requirements
 
+- This includes configuring Azure services and deploying security tools to implement the security controls that you have defined.
 - Use Azure Security Center to configure security features for your Azure resources.
 - Deploy Azure security tools, such as Azure Defender for Cloud and Azure Sentinel, to protect your Azure resources from threats.
 
-Validate your security controls.
+## Validate your security controls
 
+- This includes testing your security controls to ensure that they are working as expected. You can use tools like Azure Security Center and Azure Sentinel to help you with this process.
 - Use Azure Security Center to test your security controls and identify any potential vulnerabilities.
 - Use Azure Sentinel to monitor your Azure resources for suspicious activity.
 - Conduct regular penetration tests of your Azure environment.
 
-Monitor and improve your security posture.
+## Monitor and improve your security posture.
 
+- This includes monitoring your Azure resources for suspicious activity and regularly reviewing and updating your security requirements.
 - Use Azure Security Center to monitor your Azure resources for suspicious activity.
 - Use Azure Sentinel to investigate security incidents.
 - Regularly review and update your security requirements.
@@ -49,40 +45,17 @@ By following these steps, you can define and implement an effective Azure securi
 
 ## Real-life practical example of security validation of Azure cloud resources
 
-A large e-commerce company has a complex Azure environment with a
-variety of resources, including web servers, database servers, and
-application gateways. The company is concerned about the security of its
-Azure environment and wants to ensure that it is protected from the
-latest threats.
+A large e-commerce company has a complex Azure environment with a variety of resources, including web servers, database servers, and application gateways. The company is concerned about the security of its Azure environment and wants to ensure that it is protected from the latest threats.
 
-The company's security team decides to implement a security validation
-process for its Azure cloud resources. The team begins by identifying
-all of the Azure resources in the company's subscription. They then use
-Azure Security Benchmark to identify the security controls that need to
-be in place to protect the company's assets and mitigate the risks that
-it has identified.
+The company's security team decides to implement a security validation process for its Azure cloud resources. The team begins by identifying all of the Azure resources in the company's subscription. They then use Azure Security Benchmark to identify the security controls that need to be in place to protect the company's assets and mitigate the risks that it has identified.
 
-The security team then implements the necessary security controls. They
-use Azure Security Center to configure security features for the
-company's Azure resources, such as network security groups (NSGs), Azure
-Firewall, and Azure Defender for Cloud. They also deploy additional
-security tools, such as Azure Sentinel, to monitor the company's Azure
-environment for suspicious activity.
+The security team then implements the necessary security controls. They use Azure Security Center to configure security features for the company's Azure resources, such as network security groups (NSGs), Azure Firewall, and Azure Defender for Cloud. They also deploy additional security tools, such as Azure Sentinel, to monitor the company's Azure environment for suspicious activity.
 
-Once the security controls have been implemented, the security team
-begins the validation process. They use Azure Security Center to test
-the security controls and identify any potential vulnerabilities. They
-also conduct regular penetration tests of the company's Azure
-environment.
+Once the security controls have been implemented, the security team begins the validation process. They use Azure Security Center to test the security controls and identify any potential vulnerabilities. They also conduct regular penetration tests of the company's Azure environment.
 
-The security team also monitors the company's Azure environment for
-suspicious activity using Azure Sentinel. If any suspicious activity is
-detected, the security team investigates the incident and takes
-appropriate action.
+The security team also monitors the company's Azure environment for suspicious activity using Azure Sentinel. If any suspicious activity is detected, the security team investigates the incident and takes appropriate action.
 
-The company's security validation process has helped to ensure that its
-Azure environment is protected from the latest threats. The company has
-also benefited from the following:
+The company's security validation process has helped to ensure that its Azure environment is protected from the latest threats. The company has also benefited from the following:
 
 - Increased visibility into the security of its Azure environment
 - Improved ability to detect and respond to security incidents
@@ -93,61 +66,26 @@ Benefits of security validation of Azure cloud resources
 There are many benefits to security validation of Azure cloud resources,
 including:
 
-- Increased security posture: Security validation can help to identify
-  and address security vulnerabilities in Azure cloud resources. This
-  can help to improve the overall security posture of the Azure
-  environment.
+- Increased security posture: Security validation can help to identify and address security vulnerabilities in Azure cloud resources. This can help to improve the overall security posture of the Azure environment.
+- Reduced risk of security breaches: By identifying and addressing security vulnerabilities, security validation can help to reduce the risk of security breaches.
+- Improved compliance: Security validation can help to ensure that Azure cloud resources are compliant with security regulations and standards.
+- Increased visibility and control: Security validation can help to increase visibility into the security of Azure cloud resources and improve the ability to control access to those resources.
 
-- Reduced risk of security breaches: By identifying and addressing
-  security vulnerabilities, security validation can help to reduce the
-  risk of security breaches.
+## Conclusion
 
-- Improved compliance: Security validation can help to ensure that Azure
-  cloud resources are compliant with security regulations and standards.
-
-- Increased visibility and control: Security validation can help to
-  increase visibility into the security of Azure cloud resources and
-  improve the ability to control access to those resources.
-
-Conclusion
-
-Security validation is an important part of any Azure cloud security
-strategy. By following the steps outlined above, organizations can
-implement a security validation process that can help to improve the
-security of their Azure environment and reduce the risk of security
-incidents.
+Security validation is an important part of any Azure cloud security strategy. By following the steps outlined above, organizations can implement a security validation process that can help to improve the security of their Azure environment and reduce the risk of security incidents.
 
 ## Performed security validation of the Azure cloud infrastructure of newly onboarded clients before going live
 
 ## Security Assessment
 
-Azure security validation process: define and implement
+To define and implement an Azure security validation process, you can follow these steps:
 
-To define and implement an Azure security validation process, you can
-follow these steps:
-
-6.  Identify your assets and risks. This includes identifying all of the
-    Azure resources that you have, as well as the potential risks to
-    those resources. You can use tools like Azure Security Center to
-    help you with this process.
-
-7.  Define your security requirements. This includes defining the
-    security controls that you need in place to protect your assets and
-    mitigate the risks that you have identified. You can use Azure
-    Security Benchmark to help you with this process.
-
-8.  Implement your security requirements. This includes configuring
-    Azure services and deploying security tools to implement the
-    security controls that you have defined.
-
-9.  Validate your security controls. This includes testing your security
-    controls to ensure that they are working as expected. You can use
-    tools like Azure Security Center and Azure Sentinel to help you with
-    this process.
-
-10. Monitor and improve your security posture. This includes monitoring
-    your Azure resources for suspicious activity and regularly reviewing
-    and updating your security requirements.
+6. Identify your assets and risks. This includes identifying all of the Azure resources that you have, as well as the potential risks to those resources. You can use tools like Azure Security Center to help you with this process.
+7.  Define your security requirements. This includes defining the security controls that you need in place to protect your assets and mitigate the risks that you have identified. You can use Azure Security Benchmark to help you with this process.
+8.  Implement your security requirements. This includes configuring Azure services and deploying security tools to implement the security controls that you have defined.
+9.  Validate your security controls. This includes testing your security controls to ensure that they are working as expected. You can use tools like Azure Security Center and Azure Sentinel to help you with this process.
+10. Monitor and improve your security posture. This includes monitoring your Azure resources for suspicious activity and regularly reviewing and updating your security requirements.
 
 
 Identify your assets and risks.
