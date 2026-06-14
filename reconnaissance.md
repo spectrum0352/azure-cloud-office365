@@ -56,3 +56,75 @@ This setting can be configured to block users from viewing other user data, incl
 - **CLI Tools**: In addition to PowerShell, you can use Azure CLI (az cli) for cross-platform command-line interaction with Azure resources. This is useful for Linux and Windows environments.
 
 - **CloudPentestCheatsheets**: A great resource for various cloud penetration testing techniques, including detailed PowerShell scripts and examples: [CloudPentestCheatsheets](https://github.com/dafthack/CloudPentestCheatsheets)
+
+## 1. Scan for Open Ports on Azure-Hosted Services (using cloudhunter.py)**
+
+File: `azure_port_scan.sh`
+
+```bash
+\#!/bin/bash
+TARGET=\$1
+if \[ -z "\$TARGET" \]; then
+echo "Usage: \$0 http://target-url"
+exit 1
+fi
+python3 cloudhunter.py --write-test --open-only "\$TARGET"
+```
+
+**Usage**: ./azure_port_scan.sh http://myapp.azurewebsites.net
+
+## 2. Azure Subdomain & Endpoint Enumeration (using cf enum)
+
+File: `azure_cf_enum.sh`
+
+```bash
+\#!/bin/bash
+DOMAIN=\$1
+if \[ -z "\$DOMAIN" \]; then
+echo "Usage: \$0 \<domain\>"
+exit 1
+fi
+cf enum "\$DOMAIN" \> "\${DOMAIN}\_cf_enum.txt"
+echo "\[+\] Results saved to \${DOMAIN}\_cf_enum.txt"
+```
+
+**Usage**: ./azure_cf_enum.sh contoso.com
+
+## 3. Fuzz Azure API Endpoints (using ffuf)
+
+**File: azure_api_fuzzer.sh**
+
+```bash
+\#!/bin/bash
+TARGET=\$1
+WORDLIST="/usr/share/seclists/Discovery/Web-Content/api.txt"
+if \[ -z "\$TARGET" \]; then
+echo "Usage: \$0 https://target-url"
+exit 1
+fi
+ffuf -w "\$WORDLIST" -u "\$TARGET/FUZZ" -mc all -o ffuf_api_results.json
+echo "\[+\] Fuzzing complete. Output saved to ffuf_api_results.json"
+```
+
+**Usage**: ./azure_api_fuzzer.sh https://api.contoso.com
+
+## 4. Brute-Force Azure Blob Containers (Modified AWS S3 Script)
+
+File: `azure_blob_enum.py`
+
+```bash
+\#!/usr/bin/env python3
+import requests
+account_name = "contoso" \# Customize this
+wordlist = "containers.txt" \# Each line: e.g., public, backup, logs
+with open(wordlist) as f:
+for container in f:
+container = container.strip()
+url =
+f"https://{account_name}.blob.core.windows.net/{container}?restype=container&comp=list"
+r = requests.get(url)
+if "PublicAccess" in r.text or r.status_code == 200:
+print(f"\[+\] Found public container: {container}")
+```
+
+**Usage**: python3 azure_blob_enum.py (requires a containers.txt wordlist)
