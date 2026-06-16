@@ -1,7 +1,6 @@
-## Cloud Security Strategy
+# Cloud Security Strategy
 
-Comprehensive Cloud Security Strategy for Hybrid and Multi-Cloud
-Environments
+Comprehensive Cloud Security Strategy for Hybrid and Multi-Cloud Environments
 
 This strategy outlines essential security baselines and requirements for
 securing cloud services across SaaS, PaaS, and IaaS models, as well as

@@ -1,5 +1,4 @@
-
-
+# Cloud Computing
 
 ## Why did you choose your career in cloud computing?
 
