@@ -301,8 +301,7 @@ This process typically involves the following steps:
 
 **Additional Considerations:**
 
-- **Frequency:** Regularly conduct security assessments (e.g.,
- quarterly) to ensure ongoing security.
+- **Frequency:** Regularly conduct security assessments (e.g. quarterly) to ensure ongoing security.
 
 - **Expertise:** Consider involving security professionals with Azure
  expertise for a comprehensive assessment.
