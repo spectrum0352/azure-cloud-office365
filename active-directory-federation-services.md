@@ -1,13 +1,6 @@
 # Active Directory Federation Services
 
-Here is a **corrected, summarized, and rewritten** version of **Active
-Directory Federation Services (AD FS)** in the context of **Azure
-Penetration Testing**:
-
-------------------------------------------------------------------------
-
-**🛡️ Active Directory Federation Services (AD FS) in Azure Penetration
-Testing**
+**🛡️ Active Directory Federation Services (AD FS) in Azure Penetration Testing**
 
 **What It Is:**
 
