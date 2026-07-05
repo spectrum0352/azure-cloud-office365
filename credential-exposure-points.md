@@ -12,129 +12,69 @@
 
 ## Key Vault
 
-- Path: `Azure🡪 Key Vaults 🡪 Vault Name 🡪 Secrets/Keys/Certificates`
-- Risk severity: High
-- Risk: Misconfigured access policies may allow unauthorized access to secrets.
+- Path: Azure🡪 Key Vaults 🡪 Vault Name 🡪 Secrets/Keys/Certificates
+- Risk: Misconfigured access policies may allow unauthorized access to secrets. Poor access policies (RBAC or Access Policies) may allow unauthorized reads.
+- Risk severity: High🔸
 
-## Custom Script Extension
+## Custom Script Extensions on VMs
 
 - Path: `Azure🡪 VMs 🡪 VM 🡪 Extensions + applications`
 - Risk Severity: High
-- Risk: Scripts with hardcoded credentials are stored on disk, accessible to attackers.
+- Risk: Scripts with hardcoded credentials are stored on disk, accessible to attackers. Scripts may contain hardcoded credentials; stored in /var/lib/waagent/ on Linux or C:\Packages\Plugins on Windows.
 
-## Run Command**
+## Run Command
 
 - Path: `Azure 🡪 VM 🡪 Run command`
 - Risk Severity: High
-- Risk: Secrets may be visible in command logs or audit history.
+- Risk: Secrets may be visible in command logs or audit history. Credentials passed via command may be logged in portal or command history.
 
 ## App Service Settings
 
 - Path: `Azure 🡪 App Services 🡪 Configuration 🡪 Application Settings`
-- Risk: Secrets in environment variables can be exposed via Kudu or code dumps.
+- Risk: Secrets in environment variables can be exposed via Kudu or code dumps. Secrets stored as plain text; accessible via Kudu or environment dump.
 - Risk Severity: Medium
 
 ## ARM Templates / Parameters
 
-- Path: `Deployments or Git Repos 🡪 templates (.json) / parameters (.json)`
-- Risk: Hardcoded secrets may be exposed in source control or deployment history.
+- Path: `Deployments or Git Repos 🡪 templates (.json) / parameters (.json)` or `Stored in GitHub, DevOps repos, or ARM deployments under`
+- Risk: Hardcoded secrets may be exposed in source control (JSON/YAML) or deployment history.
 - Risk Severity: High
 
-## Log Analytics / Monitor Logs**
 
-- Path: `Azure Monitor 🡪 Logs / Log Analytics Workspace `
-- Risk: Logs may contain credentials from verbose script output.
-- Risk Severity: Medium
 
-## Automation Runbooks
+## Automation Accounts/Runbooks
 
 - Path: `Azure Automation 🡪 Automation Account 🡪 Runbooks / Credentials`
-- Risk: Hardcoded credentials or exposed variables in scripts pose leakage risk.
+- Risk: Hardcoded credentials or exposed variables in scripts pose leakage risk. Hardcoded credentials in PowerShell scripts or insecure use of stored credentials.
 - Risk Severity: High
 
-| **Azure Functions / Logic Apps** | Function App 🡪 Configuration / Code + Test | High | Environment variables or code may contain secrets directly. |
+## Azure Functions / Logic Apps
 
-- Path: 
-- Risk: 
-- Risk Severity: 
+- Path: `Function App 🡪 Configuration / Code + Test`
+- Risk: Environment variables or code may contain secrets directly. Secrets in environment variables, inline code, or bindings.
+- Risk Severity: High
 
-| **Azure Blob Storage** | Storage Account 🡪 Containers 🡪 Files | Critical | Credential files may be public or accessible with leaked SAS tokens. |
+## Azure Blob Storage
 
-- Path: 
-- Risk: 
-- Risk Severity: 
+- Path: `Storage Accounts 🡪 Containers / Files`
+- Risk: Credential files may be public or accessible with leaked SAS tokens. Blobs with sensitive data may be public or shared with SAS tokens.
+- Risk Severity: Critical
 
-- **Azure Key Vault**\
-  🔹 *Path:* Azure **Key Vaults**  *Vault Name*  **Secrets / Keys /
-  Certificates**\
-  🔸 *Risk:* Poor access policies (RBAC or Access Policies) may allow
-  unauthorized reads.
+## Azure Monitor Logs / Log Analytics
 
-- **Custom Script Extension on VMs**\
-  🔹 *Path:* Azure **VMs**  *VM Name*  **Extensions + applications**\
-  🔸 *Risk:* Scripts may contain hardcoded credentials; stored in
-  /var/lib/waagent/ on Linux or C:\Packages\Plugins on Windows.
+- Path: `Azure - Monitor - Logs / Log Analytics Workspaces`
+- Risk: Secrets may leak via diagnostic/debug logs or output from scripts. Logs may contain credentials from verbose script output.
+- Risk Severity: Medium
 
-- **Run Command**\
-  🔹 *Path:* Azure **VMs**  *VM Name*  **Run command**\
-  🔸 *Risk:* Credentials passed via command may be logged in portal or
-  command history.
+## Azure DevOps
 
-- **App Service Application Settings**\
-  🔹 *Path:* Azure **App Services**  *App Name*  **Configuration 
-  Application Settings**\
-  🔸 *Risk:* Secrets stored as plain text; accessible via Kudu or
-  environment dump.
-
-- **ARM Templates / Parameters**\
-  🔹 *Path:* Stored in GitHub, DevOps repos, or ARM deployments under
-  **Deployments**\
-  🔸 *Risk:* Hardcoded secrets in JSON/YAML files or deployment history.
-
-- **Azure Monitor Logs / Log Analytics**\
-  🔹 *Path:* Azure **Monitor**  **Logs / Log Analytics Workspaces**\
-  🔸 *Risk:* Secrets may leak via diagnostic/debug logs or output from
-  scripts.
-
-- **Automation Accounts / Runbooks**\
-  🔹 *Path:* Azure **Automation Accounts**  *Account Name* 
-  **Runbooks / Credentials**\
-  🔸 *Risk:* Hardcoded credentials in PowerShell scripts or insecure use
-  of stored credentials.
-
-- **Azure Functions / Logic Apps**\
-  🔹 *Path:* Azure **Function App**  *App Name*  **Configuration** /
-  **Code + Test**\
-  🔸 *Risk:* Secrets in environment variables, inline code, or bindings.
-
-- **Azure Storage (Blobs)**\
-  🔹 *Path:* Azure **Storage Accounts**  *Account Name* 
-  **Containers**\
-  🔸 *Risk:* Blobs with sensitive data may be public or shared with SAS
-  tokens.
-
-# Azure DevOps
-
-- **Artifacts and Logs:** Build/test logs may contain tokens, connection
-  strings, or passwords.
-
-- **Personal Access Tokens (PATs):** Stored or shared insecurely;
-  long-lived PATs increase exposure risk.
-
-- **Pipeline Variables:** Non-secret variables may be used to store
-  credentials in plain text.
-
-- **Pipeline YAML Files:** Hardcoded secrets in source-controlled CI/CD
-  definitions.
-
-- **Secure Files:** Uploaded secrets not encrypted properly or shared
-  broadly.
-
-- **Service Connections:** Improperly scoped or over-permissioned
-  connections.
-
-- **Variable Groups:** Misconfigured access control can lead to
-  credential leaks.
+- **Artifacts and Logs:** Build/test logs may contain tokens, connection strings, or passwords.
+- **Personal Access Tokens (PATs):** Stored or shared insecurely; long-lived PATs increase exposure risk.
+- **Pipeline Variables:** Non-secret variables may be used to store credentials in plain text.
+- **Pipeline YAML Files:** Hardcoded secrets in source-controlled CI/CD definitions.
+- **Secure Files:** Uploaded secrets not encrypted properly or shared broadly.
+- **Service Connections:** Improperly scoped or over-permissioned connections.
+- **Variable Groups:** Misconfigured access control can lead to credential leaks.
 
 | **Location / Feature** | **Path** | **Risk Severity** | **Risk Explanation** |
 |----|----|----|----|
