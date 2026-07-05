@@ -77,7 +77,7 @@
 - **Variable Groups:** Misconfigured access control can lead to credential leaks.
 
 | **Location / Feature** | **Path** | **Risk Severity** | **Risk Explanation** |
-|----|----|----|----|
+| ---- | ---- | ---- | ---- |
 | **Pipeline Variables** | Pipelines 🡪 Pipeline Name 🡪 Edit 🡪 Variables | Medium | Non-secret variables may hold plaintext credentials and appear in logs. |
 | **Pipeline YAML Files** | Repos 🡪 Repo Name 🡪 \*.azure-pipelines.yml | High | Hardcoded secrets in YAML are visible in source control. |
 | **Service Connections** | Project Settings 🡪 Service Connections | High | Over-permissioned or stale connections may be abused by attackers. |
@@ -86,51 +86,40 @@
 | **Build Artifacts & Logs** | Pipelines 🡪 Pipeline Run 🡪 Logs / Artifacts | Medium | Secrets may leak via debug output or logs. |
 | **Personal Access Tokens (PATs)** | User Settings 🡪 Personal Access Tokens | Critical | Compromise of a PAT can grant full access to projects, repos, and pipelines. |
 
-## Pipeline Variables
+### Pipeline Variables
 
-🔹 *Path:* Azure DevOps  **Pipelines**  *Pipeline Name*  **Edit 
-Variables**\
-🔸 *Risk:* Non-secret variables can store credentials in plain text;
-exposed in logs.
+- Path: `Azure DevOps 🡪 **Pipelines** 🡪 *Pipeline Name* 🡪 **Edit 🡪 Variables**`
+- Risk: Non-secret variables can store credentials in plain text; exposed in logs.
 
-## YAML Pipeline Files
+### YAML Pipeline Files
 
-🔹 *Path:* Azure DevOps  **Repos**  *Repo Name* 
-*.azure-pipelines.yml*\
-🔸 *Risk:* Secrets hardcoded in YAML; visible in source control.
+- Path: `Azure DevOps 🡪 **Repos** 🡪 *Repo Name* 🡪 *.azure-pipelines.yml*\`
+- Risk: Secrets hardcoded in YAML; visible in source control.
 
-## Service Connections
+### Service Connections
 
-- *Path:* Azure DevOps  **Project Settings**  **Service connections**
+- Path: `Azure DevOps 🡪 **Project Settings** 🡪 **Service connections**`
+- Risk: Over-permissioned or outdated connections (e.g., Azure RM, GitHub, DockerHub).
 
-- *Risk:* Over-permissioned or outdated connections (e.g., Azure RM,
-  GitHub, DockerHub).
+### Secure Files
 
-Secure Files
+- Path: `Azure DevOps 🡪 **Library** 🡪 **Secure files**`
+- Risk: Files may contain unencrypted keys or credentials if mishandled.
 
-Azure DevOps  **Library**  **Secure files**
+### Variable Groups
 
-*Risk:* Files may contain unencrypted keys or credentials if mishandled.
+- Path:  `Azure DevOps 🡪 **Library** 🡪 **Variable groups**`
+- Risk:  Secrets stored here if not marked as secret or if permissions are too broad.
 
-Variable Groups
+### Build Artifacts / Logs
 
-*Path:* Azure DevOps  **Library**  **Variable groups**
+- Path:  `Azure DevOps 🡪 **Pipelines** 🡪 *Pipeline Run* 🡪 **Logs /Artifacts**\`
+- Risk:  Credentials may be leaked through console output or logs.
 
-*Risk:* Secrets stored here if not marked as secret or if permissions
-are too broad.
+### Personal Access Tokens (PATs)
 
-Build Artifacts / Logs
-
-🔹 *Path:* Azure DevOps  **Pipelines**  *Pipeline Run*  **Logs /
-Artifacts**\
-🔸 *Risk:* Credentials may be leaked through console output or logs.
-
-Personal Access Tokens (PATs)
-
-🔹 *Path:* Azure DevOps  **User Settings**  **Personal Access
-Tokens**\
-🔸 *Risk:* Long-lived PATs or tokens shared insecurely can lead to
-account compromise.
+- Path: `Azure DevOps 🡪 **User Settings** 🡪 **Personal Access Tokens**`
+- Risk:  Long-lived PATs or tokens shared insecurely can lead to account compromise.
 
 # Credential Storage Best Practices
 
@@ -525,13 +514,13 @@ db_pass --query SecretString --output text)
 
 | **Location / Feature** | **Path** | **Risk Severity** | **Risk Explanation** |
 |----|----|----|----|
-| **Pipeline Variables** | Pipelines  Pipeline Name  Edit  Variables | Medium | Non-secret variables may hold plaintext credentials and appear in logs. |
-| **Pipeline YAML Files** | Repos  Repo Name  \*.azure-pipelines.yml | High | Hardcoded secrets in YAML are visible in source control. |
-| **Service Connections** | Project Settings  Service Connections | High | Over-permissioned or stale connections may be abused by attackers. |
-| **Secure Files** | Library  Secure Files | Medium | Files uploaded here can be misused if permissions are too broad. |
-| **Variable Groups** | Library  Variable Groups | Medium | Variables may not be marked as secret; risk if reused across pipelines. |
-| **Build Artifacts & Logs** | Pipelines  Pipeline Run  Logs / Artifacts | Medium | Secrets may leak via debug output or logs. |
-| **Personal Access Tokens (PATs)** | User Settings  Personal Access Tokens | Critical | Compromise of a PAT can grant full access to projects, repos, and pipelines. |
+| **Pipeline Variables** | Pipelines 🡪 Pipeline Name 🡪 Edit 🡪 Variables | Medium | Non-secret variables may hold plaintext credentials and appear in logs. |
+| **Pipeline YAML Files** | Repos 🡪 Repo Name 🡪 \*.azure-pipelines.yml | High | Hardcoded secrets in YAML are visible in source control. |
+| **Service Connections** | Project Settings 🡪 Service Connections | High | Over-permissioned or stale connections may be abused by attackers. |
+| **Secure Files** | Library 🡪 Secure Files | Medium | Files uploaded here can be misused if permissions are too broad. |
+| **Variable Groups** | Library 🡪 Variable Groups | Medium | Variables may not be marked as secret; risk if reused across pipelines. |
+| **Build Artifacts & Logs** | Pipelines 🡪 Pipeline Run 🡪 Logs / Artifacts | Medium | Secrets may leak via debug output or logs. |
+| **Personal Access Tokens (PATs)** | User Settings 🡪 Personal Access Tokens | Critical | Compromise of a PAT can grant full access to projects, repos, and pipelines. |
 
 # Credential Storage Best Practices
 
