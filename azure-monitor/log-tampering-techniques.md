@@ -1,13 +1,6 @@
 # Logging Tampering Techniques
 
-Here’s a rewritten and corrected version of your notes in the context of
-**Azure Penetration Testing**, repurposed from AWS CloudTrail tampering
-to the equivalent for **Azure Activity Logs, Diagnostic Settings, and
-Storage Accounts**, which are analogous logging mechanisms in Azure.
-
-**Azure Logging Tampering Techniques (PenTest/Red Team Context)**
-
-**1. Delete Diagnostic Settings (Similar to Deleting CloudTrail)**
+## 1. Delete Diagnostic Settings (Similar to Deleting CloudTrail)
 
 **CLI:**
 

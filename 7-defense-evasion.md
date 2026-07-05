@@ -1,8 +1,32 @@
-# Defense evasion
+## 7. Defense Evasion Assessment
 
-Here’s a **corrected, summarized, and Azure-adapted version** of the
-original AWS CloudTrail tampering example, rewritten for **Azure
-Penetration Testing**:
+**Goal:** Test whether Azure-native and third-party controls detect evasion techniques rather than just known indicators.
+
+- Test detection of signed-binary-proxy execution (`mshta.exe`, `rundll32.exe`) on Azure-hosted Windows workloads
+- Use Microsoft Defender for Cloud/Endpoint to validate alerting on obfuscated commands and encoded PowerShell
+- Simulate sandbox/virtualization-evasion behavior in Function Apps or containers to test whether it bypasses detection
+- Validate logging coverage: Activity Logs, Diagnostic Logs, Identity Protection logs, and whether KQL/Sentinel rules actually fire on these behaviors
+- Confirm UEBA and MITRE ATT&CK-mapped analytics rules cover the techniques exercised in Stages 4–6
+
+
+
+# Defense Evasion and Detection Validation Flow
+
+Trigger Security Monitoring Events → Observe Alert Generation → Evaluate Defender for Cloud Detection → Validate SIEM Integration → Measure Alert Response Time → Identify Logging Blind Spots → Document Detection Weaknesses
+
+## 8. Cleanup & Environment Restoration
+
+**Goal:** Leave the tenant in its original state with zero residual access.
+
+- Remove any test accounts created during the engagement
+- Remove all test service principals and their role assignments
+- Revert any configuration changes (firewall rules, AD admin additions, etc.)
+- Terminate all active sessions
+- Clear temporary artifacts, scripts, and exported runbook content
+- Validate environment integrity against pre-engagement baseline
+- Confirm — explicitly, not just by assumption — that no persistent access remains.
+
+# Defense evasion
 
 **🕵️‍♂️ Azure - Log Evasion & Monitoring Evasion Techniques**
 

@@ -4,9 +4,10 @@ If you need to transfer files directly from an on-premises server to an Azure Vi
 
 ---
 
-# 1. 🔒 SFTP over Azure Bastion (Most Secure and Flexible)
+## 1. 🔒 SFTP over Azure Bastion (Most Secure and Flexible)
 
 **Best For**
+
 - Encrypted file transfers
 - Firewall-friendly connectivity
 - Cross-platform environments

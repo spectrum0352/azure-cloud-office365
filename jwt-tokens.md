@@ -2,12 +2,6 @@ Azure-pentest-jwt-tokens
 
 # JWT Tokens in azure pentest
 
-Here is a **corrected, summarized, and rewritten version** of your
-notes, with a focus on **how JWTs are relevant to Azure penetration
-testing**:
-
-------------------------------------------------------------------------
-
 **JWT (JSON Web Token) in Azure Penetration Testing**
 
 **🔐 What is a JWT?**

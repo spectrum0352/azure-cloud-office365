@@ -1,10 +1,4 @@
-## Pass through Authentication
-
-Here’s a **corrected, summarized, and rewritten version** of
-**Pass-Through Authentication (PTA)** in the context of **Azure
-Penetration Testing**:
-
-------------------------------------------------------------------------
+# Pass through Authentication
 
 **🔐 Pass-Through Authentication (PTA) in Azure Penetration Testing**
 

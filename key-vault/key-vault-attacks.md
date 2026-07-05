@@ -1,6 +1,6 @@
-# Azure Key Vault
+# Key Vault
 
-### Key Vault Enumeration & Secret Extraction
+## Key Vault Enumeration & Secret Extraction
 
 **List all Key Vaults accessible to current identity:**
 

@@ -1,4 +1,4 @@
-## Password Hash Synchronization
+# Password Hash Synchronization
 
 **Password Hash Synchronization (PHS)** directly helps an **Azure
 penetration tester** by creating a **bridge between on-prem Active

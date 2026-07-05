@@ -1,245 +1,164 @@
-Azure-pentest-initial-attack-vectors
+# Initial attack vectors
 
-# Initial Access attack vector in Azure
+## 1. Phishing
 
-In the context of **Azure cloud environments**, attackers may employ a
-blend of traditional phishing and cloud-specific misconfigurations to
-achieve **initial access**. Based on the content from your uploaded
-document and Azure-specific risks, here’s a summarized and
-contextualized list:
+Attackers use social engineering to trick users into revealing their Microsoft Entra ID credentials or executing malicious content. Since most Azure resources are identity-driven, compromising a single user account can provide immediate access to Azure Portal, Microsoft 365, Azure CLI, Microsoft Graph, and other cloud services.
 
-## Common Initial Access Techniques in Azure
+### 1.1 Common Techniques
 
-### 1. Phishing via Third-Party Channels
+- Fake Microsoft sign-in pages
+- HTML Smuggling
+- Office documents with malicious macros or embedded downloaders
+- QR-code phishing (Quishing)
+- MFA fatigue attacks
+- Adversary-in-the-Middle (AiTM) phishing
 
-- **Pretext**: Fake job offers, investor inquiries, marketing outreach.
+### 1.2 Attack Flow
 
-- **Payloads**:
+1. The attacker sends a phishing email, Teams message, or LinkedIn message.
+2. The victim clicks a fake Microsoft login page or opens a malicious attachment.
+3. Credentials, MFA tokens, or session cookies are stolen.
+4. The attacker authenticates to Microsoft Entra ID.
+5. Using the stolen identity, the attacker gains access to Azure Portal, Azure CLI, Microsoft Graph, Exchange Online, or other cloud resources.
 
-  - **HTML Smuggling** – Embeds malicious JS that reconstructs
-    executables client-side.
+### 1.3 Potential Impact
 
-  - **Office Docs** (e.g. .docm, .xll, .xsl) with **VBA macros**,
-    **DotNetToJS**, or **DLL droppers**.
+- Microsoft Entra ID account compromise
+- Azure Portal access
+- Microsoft 365 compromise
+- Azure subscription access
+- Session hijacking
 
-- **Delivery**: Avoid corporate email detection by using LinkedIn, web
-  contact forms, or partner channels.
+---
 
-✅ **Azure Context**: Targets employees with access to Azure resources
-like the Azure Portal, privileged VMs, or key vaults.
+## 2. Exploitation of Internet-Facing Applications
 
-### 2. Exploitation of Azure Web Apps and Public Services
+Attackers scan public Azure-hosted applications for exploitable vulnerabilities. Successful exploitation allows arbitrary code execution within the application, often providing access to Managed Identities, application secrets, or backend Azure resources.
 
-- Vulnerable **Azure App Service** (e.g., via deserialization, SSRF).
+### 2.1 Attack Flow
 
-- Misconfigured **Function Apps**, especially when exposing environment
-  variables or managed identity tokens.
+1. The attacker discovers an internet-facing Azure App Service, Function App, AKS workload, or API.
+2. The attacker exploits vulnerabilities such as SSRF, RCE, SQL Injection, or deserialization.
+3. Code executes on the Azure-hosted application.
+4. The attacker extracts Managed Identity tokens, application secrets, or Azure credentials.
+5. These credentials are used to authenticate against Azure Resource Manager or Microsoft Graph.
 
-- **Containerized malware** in **AKS** (Azure Kubernetes Service) or
-  uploaded to **Azure Container Registry**.
+### 2.2 Potential Impact
 
-### 3. Compromised Azure Credentials
+- Initial shell access
+- Managed Identity compromise
+- Azure resource access
+- Container compromise
 
-- **Leaked API Keys**, SAS tokens, or Storage account credentials from:
+---
 
-  - Public GitHub/GitLab repos
+## 3. Exposed Credentials and Secrets
 
-  - Misconfigured Azure DevOps pipelines
+Developers frequently expose Azure credentials in source code, configuration files, CI/CD pipelines, or public repositories. Attackers continuously scan the Internet for these secrets and use them to authenticate directly to Azure without exploiting any vulnerability.
 
-- **Stolen access tokens** via MITM or phishing.
+### 3.1 Attack Flow
 
-✅ **Impact**: Immediate access to services like Azure Blob Storage,
-Cosmos DB, Key Vault, or VM RunCommand.
+1. The attacker discovers leaked credentials in GitHub, GitLab, Azure DevOps, public storage, or backup files.
+2. The credentials are validated against Azure authentication endpoints.
+3. Successful authentication provides immediate access using Azure CLI, Azure PowerShell, REST APIs, or the Azure Portal.
+4. The attacker enumerates accessible subscriptions and resources.
 
-### 4. Abusing Azure AD OAuth Applications
+### 3.2 Potential Impact
 
-- Malicious Azure AD OAuth applications consented via phishing.
+- Azure CLI authentication
+- Storage account compromise
+- Key Vault access
+- Service Principal compromise
 
-- Abusing **multi-tenant apps** with overly broad Graph API permissions.
+---
 
-- Stealing **refresh tokens** or **primary refresh tokens (PRTs)** for
-  long-term persistence.
+## 4. OAuth Application Consent Abuse
 
-✅ Seen in real-world phishing campaigns with **HTML Smuggling** + OAuth
-token theft.
+Instead of stealing passwords, attackers convince users to grant consent to a malicious Microsoft Entra application. Once approved, the application receives OAuth tokens that allow persistent access to Microsoft Graph and Microsoft 365 resources without requiring the user's password.
 
-### 5. Initial Access via Misconfigured Services
+### 4.1 Attack Flow
 
-- **Publicly exposed VMs**, Jumpboxes, or Bastion Hosts.
+1. The attacker creates a malicious OAuth application.
+2. A victim is sent a consent URL through phishing or social engineering.
+3. The victim approves the requested permissions.
+4. Microsoft Entra ID issues OAuth access and refresh tokens.
+5. The attacker accesses Microsoft Graph APIs on behalf of the user.
 
-- **NSG misconfigurations** allowing RDP/SSH from Internet.
+### 4.2 Potential Impact
 
-- **Azure Firewall** permitting egress to attacker infrastructure.
+- Persistent Graph API access
+- Mailbox compromise
+- OneDrive access
+- Teams data access
 
-### 6. Containerized Malware in Azure Environments
+---
 
-- Weaponized files inside ISO/IMG/ZIP uploaded to storage accounts or
-  shared via Teams/OneDrive.
+## 5. Password Spraying
 
-- Bypasses **Mark-of-the-Web** and avoids sandboxing.
+Password spraying targets many user accounts using a small number of commonly used passwords. This avoids account lockouts while identifying weak passwords that provide valid access to Microsoft Entra ID.
 
-### 7. Insider or Third-Party Breaches
+### 5.1 Attack Flow
 
-- Azure partners, vendors, or SaaS integrations mismanaging access
-  rights.
+1. The attacker enumerates valid usernames.
+2. A commonly used password is attempted against many accounts.
+3. Successfully authenticated accounts are identified.
+4. The attacker logs into Azure Portal or Microsoft 365 using the compromised account.
 
-- Overprivileged **Azure AD Guest Users**.
+### 5.2 Potential Impact
 
-# Azure Initial Access Attack Vectors
+- Valid user access
+- Azure Portal compromise
+- Microsoft 365 compromise
 
-In **Azure penetration testing**, gaining **initial access** typically
-mirrors traditional cloud or enterprise entry points, but it's adapted
-to **Azure-specific services, identity models, and configurations**.
-Below is a comprehensive list of **initial access attack vectors** used
-in Azure, along with how each is exploited during a PenTest.
+---
 
-## 1. Phishing for Azure AD Credentials
+## 6. Misconfigured Azure Resources
 
-- **Technique**: Credential harvesting via fake Microsoft login pages
-  (e.g., login.microsoftonline.com clone).
+Misconfigured Azure services frequently expose administrative interfaces, storage accounts, APIs, or virtual machines directly to the Internet. Attackers identify these exposed resources through Internet-wide scanning and exploit weak or missing security controls.
 
-- **Use in Pentest**:
+### 6.1 Attack Flow
 
-  - Capture Azure AD credentials.
+1. The attacker scans Azure IP ranges and DNS records.
+2. Public storage accounts, Azure Functions, App Services, or VMs are discovered.
+3. Weak authentication or insecure configuration is exploited.
+4. Administrative access or sensitive data is obtained.
+5. The attacker uses the compromised resource to pivot further into Azure.
 
-  - Replay credentials for access to Azure Portal, Outlook, Teams, or
-    Graph API.
+### 6.2 Potential Impact
 
-  - MFA fatigue attacks are increasingly used with push notifications.
+- Unauthorized access
+- Data exposure
+- Remote code execution
 
-## 2. Leaked Credentials / Secrets
+---
 
-- **Sources**:
+## 7. Managed Identity Token Theft (SSRF)
 
-  - GitHub (e.g., leaked AZURE_CLIENT_SECRET, AZURE_STORAGE_KEY).
+Applications with Server-Side Request Forgery (SSRF) vulnerabilities may allow attackers to access the Azure Instance Metadata Service (IMDS). If a Managed Identity is assigned, Azure returns OAuth access tokens that can be used to authenticate to Azure services.
 
-  - Pastebin, public S3/Git repos, old scripts.
+### 7.1 Attack Flow
 
-- **Use in Pentest**:
+1. The attacker identifies an SSRF vulnerability.
+2. Requests are redirected to the Azure Metadata Service.
+3. Azure returns a Managed Identity access token.
+4. The attacker uses the token to access Azure Resource Manager, Key Vault, Storage, or Microsoft Graph.
 
-  - Use az login --service-principal to authenticate using:
+### 7.2 Potential Impact
 
-  - az login --service-principal -u APP_ID -p CLIENT_SECRET --tenant
-    TENANT_ID
+- Managed Identity compromise
+- Azure API access
+- Secret theft
 
-  - Exploit access via Azure CLI, PowerShell, or REST API.
+---
 
-## 3. Compromised Azure AD Tenant (Misconfigured App Registrations)
+We can apply this same pattern to **all 11 attack vectors**:
 
-- **Technique**: Abusing over-permissive Azure AD App Registrations or
-  Service Principals.
-
-- **Use in Pentest**:
-
-  - Impersonate applications with Application.ReadWrite.All,
-    User.Read.All, etc.
-
-  - Pivot into Graph API for lateral movement.
-
-## 4. Misconfigured Azure Services (Public Exposure)
-
-- **Examples**:
-
-  - **Public Blob Containers**: Anonymous access to .core.windows.net.
-
-  - **Function Apps / Logic Apps**: With HTTP trigger + no auth
-    (anonymous or function level).
-
-  - **App Services**: Leaked environment variables, credentials in
-    web.config.
-
-- **Use in Pentest**:
-
-  - Enumerate with tools like AzScanner, Burp, or custom fuzzers.
-
-  - Exploit SSRF, RCE, or code download.
-
-## 5. Password Spraying / Brute Forcing Azure AD
-
-- **Technique**: Spray login.microsoftonline.com with known users.
-
-- **Use in Pentest**:
-
-  - Tools: [MicroBurst](https://github.com/NetSPI/MicroBurst),
-    [MSOLSpray](https://github.com/dafthack/MSOLSpray),
-    [o365creeper](https://github.com/LMGsecurity/o365creeper).
-
-  - Bypass conditional access if targeting non-MFA legacy auth
-    (IMAP/SMTP).
-
-## 6. OAuth Token Abuse / Malicious App Consent
-
-- **Technique**: Trick user into consenting to a malicious Azure app
-  with broad API scopes.
-
-- **Use in Pentest**:
-
-  - Attackers use crafted OAuth URLs:
-
-  - https://login.microsoftonline.com/common/oauth2/v2.0/authorize?
-
-  - client_id=\<malicious_app\>&response_type=code&redirect_uri=...&scope=...&prompt=consent
-
-  - Gain persistent access via refresh tokens.
-
-## 7. SSRF to Metadata Service
-
-- **Target**: http://169.254.169.254/metadata/identity/oauth2/token
-
-- **Use in Pentest**:
-
-  - From SSRF-vulnerable Azure Function/App, steal Managed Identity
-    tokens.
-
-  - Impersonate services to access Key Vault or Storage.
-
-## 8. Azure DevOps Token / PAT Theft
-
-- **Technique**: Leaked Personal Access Tokens (PATs) or OAuth tokens
-  for Azure DevOps.
-
-- **Use in Pentest**:
-
-  - Access repos, pipelines, agent secrets, or downstream Azure
-    deployments.
-
-## 9. Insider Access / Shared Tenant
-
-- **Technique**: An insider or vendor has delegated access to the Azure
-  AD tenant.
-
-- **Use in Pentest**:
-
-  - Abuse RBAC roles (e.g., Contributor) to create backdoors, dump Key
-    Vault, or escalate to Owner.
-
-## 10. Abusing External Identities (B2B / Guest Accounts)
-
-- **Technique**: Exploit mismanaged B2B guest accounts.
-
-- **Use in Pentest**:
-
-  - Check if guest has too much privilege.
-
-  - Lateral move from guest to tenant-wide data if RBAC is weak.
-
-## 11. Malicious Extensions in Azure VMs
-
-- **Technique**: If you can access ARM or Contributor role, inject VM
-  extensions like CustomScriptExtension.
-
-- **Use in Pentest**:
-
-  - Execute PowerShell or shell commands as SYSTEM/root on a target VM.
-
-## Tools Commonly Used
-
-- **MicroBurst** – Azure enumeration & exploitation
-
-- **ROADtools** – Token exploration & exploitation
-
-- **TokenTactics** – OAuth abuse & Azure token operations
-
-- **Aztuna / AzADEnum** – Azure AD user & role enumeration
-
-- **Stormspotter / Azucar** – Attack path mapping
+* **Overview** (what the attack is)
+* **How attackers gain initial access** (1–2 paragraph explanation)
+* **Attack Flow** (step-by-step)
+* **Common Techniques**
+* **Potential Impact**
+* **Azure Services Targeted**
+* **MITRE ATT&CK Mapping**
+* **Common Detection Opportunities**
+* **Recommended Mitigations**

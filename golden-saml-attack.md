@@ -1,9 +1,5 @@
 # Azure Golden SAML Attack (AD FS / Hybrid Identity Bypass)
 
-Here’s a **corrected, summarized, and Azure-specific rewrite** of the
-**Golden SAML attack** technique, tailored for use during an **Azure
-penetration test**.
-
 ------------------------------------------------------------------------
 
 **🥇 Azure Golden SAML Attack (AD FS / Hybrid Identity Bypass)**

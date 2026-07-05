@@ -1,39 +1,14 @@
-## Legacy Authentication
+# Legacy Authentication Attacks
 
-Here is a **summarized, corrected, and rewritten** version of the
-**Legacy Authentication** section tailored for **Azure Penetration
-Testing**:
+## What is it?
 
-------------------------------------------------------------------------
+- **Legacy Authentication** refers to outdated protocols used to access cloud resources, such as:
+  - **SMTP**, **IMAP**, **EAS** (Exchange ActiveSync), **EWS** (Exchange Web Services), **POP3**, etc.
+- These protocols are **less secure** than modern authentication methods (OAuth2, SAML) and are vulnerable to attacks such as **password spraying** and **brute-force**.
 
-**🔒 Legacy Authentication in Azure Penetration Testing**
+## Impact on Azure
 
-**What It Is:**
-
-- **Legacy Authentication** refers to outdated protocols used to access
-  cloud resources, such as:
-
-  - **SMTP**, **IMAP**, **EAS** (Exchange ActiveSync), **EWS** (Exchange
-    Web Services), **POP3**, etc.
-
-- These protocols are **less secure** than modern authentication methods
-  (OAuth2, SAML) and are vulnerable to attacks such as **password
-  spraying** and **brute-force**.
-
-------------------------------------------------------------------------
-
-**🎯 Legacy Authentication’s Impact on Azure PenTest**
-
-**✅ 1. Common Attack Surface for MFA Bypass**
-
-- **Legacy protocols** bypass **modern MFA** and Conditional Access
-  Policies.
-
-  - For example, **IMAP/SMTP** logins with basic authentication are
-    typically **not subject to MFA**.
-
-- Pentesters can attempt **password spraying** or **brute-forcing**
-  against these legacy protocols to gain initial access.
+1. **Easy to bypass MFA**: `Legacy protocols` bypass **Modern MFA** and Conditional Access Policies. For example, `IMAP/SMTP` logins with basic authentication are typically **not subject to MFA**. Pentesters can attempt **password spraying** or **brute-forcing** against these legacy protocols to gain initial access.
 
 **✅ 2. Targeting Legacy Services**
 
