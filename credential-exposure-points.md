@@ -62,7 +62,7 @@
 
 ## Azure Monitor Logs / Log Analytics
 
-- Path: `Azure - Monitor - Logs / Log Analytics Workspaces`
+- Path: `Azure 🡪 Monitor 🡪 Logs / Log Analytics Workspaces`
 - Risk: Secrets may leak via diagnostic/debug logs or output from scripts. Logs may contain credentials from verbose script output.
 - Risk Severity: Medium
 
@@ -78,13 +78,13 @@
 
 | **Location / Feature** | **Path** | **Risk Severity** | **Risk Explanation** |
 |----|----|----|----|
-| **Pipeline Variables** | Pipelines  Pipeline Name  Edit  Variables | Medium | Non-secret variables may hold plaintext credentials and appear in logs. |
-| **Pipeline YAML Files** | Repos  Repo Name  \*.azure-pipelines.yml | High | Hardcoded secrets in YAML are visible in source control. |
-| **Service Connections** | Project Settings  Service Connections | High | Over-permissioned or stale connections may be abused by attackers. |
-| **Secure Files** | Library  Secure Files | Medium | Files uploaded here can be misused if permissions are too broad. |
-| **Variable Groups** | Library  Variable Groups | Medium | Variables may not be marked as secret; risk if reused across pipelines. |
-| **Build Artifacts & Logs** | Pipelines  Pipeline Run  Logs / Artifacts | Medium | Secrets may leak via debug output or logs. |
-| **Personal Access Tokens (PATs)** | User Settings  Personal Access Tokens | Critical | Compromise of a PAT can grant full access to projects, repos, and pipelines. |
+| **Pipeline Variables** | Pipelines 🡪 Pipeline Name 🡪 Edit 🡪 Variables | Medium | Non-secret variables may hold plaintext credentials and appear in logs. |
+| **Pipeline YAML Files** | Repos 🡪 Repo Name 🡪 \*.azure-pipelines.yml | High | Hardcoded secrets in YAML are visible in source control. |
+| **Service Connections** | Project Settings 🡪 Service Connections | High | Over-permissioned or stale connections may be abused by attackers. |
+| **Secure Files** | Library 🡪 Secure Files | Medium | Files uploaded here can be misused if permissions are too broad. |
+| **Variable Groups** | Library 🡪 Variable Groups | Medium | Variables may not be marked as secret; risk if reused across pipelines. |
+| **Build Artifacts & Logs** | Pipelines 🡪 Pipeline Run 🡪 Logs / Artifacts | Medium | Secrets may leak via debug output or logs. |
+| **Personal Access Tokens (PATs)** | User Settings 🡪 Personal Access Tokens | Critical | Compromise of a PAT can grant full access to projects, repos, and pipelines. |
 
 ## Pipeline Variables
 
