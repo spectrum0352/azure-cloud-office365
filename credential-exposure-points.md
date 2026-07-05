@@ -1,43 +1,68 @@
-# Azure
+# Credential exposure points in Azure
 
-- **App Configuration / Application Settings:** Web apps may store
-  secrets in plain text settings.
+- **App Config/Settings:** Web apps may store secrets in plain text settings.
+- **Azure Automation / Runbooks:** Credentials hardcoded or improperly secured in scripts.
+- **Azure Functions / Logic Apps:** Environment variables or code may contain exposed secrets.
+- **Azure Key Vault:** Misconfigured access policies can expose secrets to unauthorized users.
+- **Azure Resource Manager (ARM) Templates:** Hardcoded secrets in templates or parameter files.
+- **Azure Run Command:** Command history may reveal sensitive credentials.
+- **Blob Storage:** Unsecured or publicly accessible blobs with credential files.
+- **Log Analytics / Diagnostics Logs:** Debug logs may inadvertently capture credentials.
+- **VM Custom Script Extensions:** Scripts with embedded credentials may be stored in plain text.
 
-- **Azure Automation / Runbooks:** Credentials hardcoded or improperly
-  secured in scripts.
+## Key Vault
 
-- **Azure Functions / Logic Apps:** Environment variables or code may
-  contain exposed secrets.
+- Path: `Azure🡪 Key Vaults 🡪 Vault Name 🡪 Secrets/Keys/Certificates`
+- Risk severity: High
+- Risk: Misconfigured access policies may allow unauthorized access to secrets.
 
-- **Azure Key Vault:** Misconfigured access policies can expose secrets
-  to unauthorized users.
+## Custom Script Extension
 
-- **Azure Resource Manager (ARM) Templates:** Hardcoded secrets in
-  templates or parameter files.
+- Path: `Azure🡪 VMs 🡪 VM 🡪 Extensions + applications`
+- Risk Severity: High
+- Risk: Scripts with hardcoded credentials are stored on disk, accessible to attackers.
 
-- **Azure Run Command:** Command history may reveal sensitive
-  credentials.
+## Run Command**
 
-- **Blob Storage:** Unsecured or publicly accessible blobs with
-  credential files.
+- Path: `Azure 🡪 VM 🡪 Run command`
+- Risk Severity: High
+- Risk: Secrets may be visible in command logs or audit history.
 
-- **Log Analytics / Diagnostics Logs:** Debug logs may inadvertently
-  capture credentials.
+## App Service Settings
 
-- **VM Custom Script Extensions:** Scripts with embedded credentials may
-  be stored in plain text.
+- Path: `Azure 🡪 App Services 🡪 Configuration 🡪 Application Settings`
+- Risk: Secrets in environment variables can be exposed via Kudu or code dumps.
+- Risk Severity: Medium
 
-| **Location / Feature** | **Path** | **Risk Severity** | **Risk Explanation** |
-|----|----|----|----|
-| **Key Vault** | Azure🡪 Key Vaults 🡪 Vault Name 🡪 Secrets/Keys/Certificates | High | Misconfigured access policies may allow unauthorized access to secrets. |
-| **Custom Script Extension** | Azure🡪 VMs 🡪 VM 🡪 Extensions + applications | High | Scripts with hardcoded credentials are stored on disk, accessible to attackers. |
-| **Run Command** | Azure 🡪 VM 🡪 Run command | High | Secrets may be visible in command logs or audit history. |
-| **App Service Settings** | Azure 🡪 App Services 🡪 Configuration 🡪 Application Settings | Medium | Secrets in environment variables can be exposed via Kudu or code dumps. |
-| **ARM Templates / Parameters** | Deployments or Git Repos 🡪 templates (.json) / parameters (.json) | High | Hardcoded secrets may be exposed in source control or deployment history. |
-| **Log Analytics / Monitor Logs** | Azure Monitor 🡪 Logs / Log Analytics Workspace | Medium | Logs may contain credentials from verbose script output. |
-| **Automation Runbooks** | Azure Automation 🡪 Automation Account 🡪 Runbooks / Credentials | High | Hardcoded credentials or exposed variables in scripts pose leakage risk. |
+## ARM Templates / Parameters
+
+- Path: `Deployments or Git Repos 🡪 templates (.json) / parameters (.json)`
+- Risk: Hardcoded secrets may be exposed in source control or deployment history.
+- Risk Severity: High
+
+## Log Analytics / Monitor Logs**
+
+- Path: `Azure Monitor 🡪 Logs / Log Analytics Workspace `
+- Risk: Logs may contain credentials from verbose script output.
+- Risk Severity: Medium
+
+## Automation Runbooks
+
+- Path: `Azure Automation 🡪 Automation Account 🡪 Runbooks / Credentials`
+- Risk: Hardcoded credentials or exposed variables in scripts pose leakage risk.
+- Risk Severity: High
+
 | **Azure Functions / Logic Apps** | Function App 🡪 Configuration / Code + Test | High | Environment variables or code may contain secrets directly. |
+
+- Path: 
+- Risk: 
+- Risk Severity: 
+
 | **Azure Blob Storage** | Storage Account 🡪 Containers 🡪 Files | Critical | Credential files may be public or accessible with leaked SAS tokens. |
+
+- Path: 
+- Risk: 
+- Risk Severity: 
 
 - **Azure Key Vault**\
   🔹 *Path:* Azure **Key Vaults**  *Vault Name*  **Secrets / Keys /

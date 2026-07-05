@@ -2,94 +2,50 @@
 
 ## What is it?
 
-- **Legacy Authentication** refers to outdated protocols used to access cloud resources, such as:
-  - **SMTP**, **IMAP**, **EAS** (Exchange ActiveSync), **EWS** (Exchange Web Services), **POP3**, etc.
+- **Legacy Authentication** refers to outdated protocols used to access cloud resources, such as **SMTP**, **IMAP**, **EAS** (Exchange ActiveSync), **EWS** (Exchange Web Services), **POP3**, etc.
 - These protocols are **less secure** than modern authentication methods (OAuth2, SAML) and are vulnerable to attacks such as **password spraying** and **brute-force**.
 
 ## Impact on Azure
 
 1. **Easy to bypass MFA**: `Legacy protocols` bypass **Modern MFA** and Conditional Access Policies. For example, `IMAP/SMTP` logins with basic authentication are typically **not subject to MFA**. Pentesters can attempt **password spraying** or **brute-forcing** against these legacy protocols to gain initial access.
+2. **Targeting Legacy Services:** Even if `MFA` is required for modern web apps (like O365), users might still be able to access their mail via **legacy protocols** that **don’t require MFA**. Many older client apps (e.g., **Outlook for Mac** or **legacy mobile apps**) may still use these protocols, offering an attack vector.
+3. **Exploiting Misconfigured Policies:** The `Conditional Access Policies` can block legacy authentication protocols, but they need to be explicitly configured. If not blocked, legacy auth can **bypass security policies**. **Exploiting misconfigurations** like allowing legacy auth for specific users or groups can enable access to cloud services without MFA.
 
-**✅ 2. Targeting Legacy Services**
+## Attack flow for Legacy Authentication methods
 
-- Even if **MFA** is required for modern web apps (like O365), users
-  might still be able to access their mail via **legacy protocols** that
-  **don’t require MFA**.
+1. **Recon**:
+  
+    - Identify if legacy protocols like **IMAP**, **SMTP**, or **EAS** are enabled for users
+    - Query Azure AD for users still using legacy protocols via PowerShell or MS Graph API.
 
-- Many older client apps (e.g., **Outlook for Mac** or **legacy mobile
-  apps**) may still use these protocols, offering an attack vector.
+2. **Exploit**:
 
-**✅ 3. Exploiting Misconfigured Policies**
+    - If allowed, attempt **password spraying** or **brute-forcing** using credentials leaked from previous breaches.
+    - Target the **non-MFA users** or **service accounts** that may not use legacy auth restrictions.
 
-- **Conditional Access Policies** can block legacy authentication
-  protocols, but they need to be explicitly configured.
+3. **Escalate**:
 
-- If not blocked, legacy auth can **bypass security policies**.
+    - Once access is gained, perform lateral movement via mail client access or use stolen tokens to escalate privileges.
 
-- **Exploiting misconfigurations** like allowing legacy auth for
-  specific users or groups can enable access to cloud services without
-  MFA.
+## Mitigation
 
-------------------------------------------------------------------------
-
-**🧰 Pentester Workflow Example: Attacking Legacy Auth**
-
-1.  **Recon**: Identify if legacy protocols like **IMAP**, **SMTP**, or
-    **EAS** are enabled for users.
-
-    - Query Azure AD for users still using legacy protocols via
-      PowerShell or MS Graph API.
-
-2.  **Exploit**: If allowed, attempt **password spraying** or
-    **brute-forcing** using credentials leaked from previous breaches.
-
-    - Target the **non-MFA users** or **service accounts** that may not
-      use legacy auth restrictions.
-
-3.  **Escalate**: Once access is gained, perform lateral movement via
-    mail client access or use stolen tokens to escalate privileges.
+- **Block Legacy Authentication**: Use **Conditional Access Policies** to block legacy protocols like SMTP, IMAP, POP3, etc.
+- **Enable Modern Authentication**: Enforce **OAuth2** for all users and apps.
+- **Monitor Logs**: Regularly audit for failed legacy auth attempts and unusual patterns.
 
 ------------------------------------------------------------------------
 
-**🛡️ Mitigating Legacy Authentication Risks (Blue Team)**
+- Script to enumerate legacy authentication usage in Microsoft Entra.
+- Script to list recommended Conditional Access policies for blocking legacy protocols?
 
-- **Block Legacy Authentication**: Use **Conditional Access Policies**
-  to block legacy protocols like SMTP, IMAP, POP3, etc.
+## Script to Enumerate Legacy Authentication Usage in Entra
 
-- **Enable Modern Authentication**: Enforce **OAuth2** for all users and
-  apps.
-
-- **Monitor Logs**: Regularly audit for failed legacy auth attempts and
-  unusual patterns.
-
-------------------------------------------------------------------------
-
-Would you like a script to **enumerate legacy authentication usage** for
-users in an Azure AD tenant or a list of recommended Conditional Access
-policies for blocking legacy protocols?
-
-<img src="media/image1.png" style="width:3.68365in;height:5.29212in" />
-
-Here is a **PowerShell script** to **enumerate legacy authentication
-usage** in an **Azure AD tenant**. This script checks for users who are
-using **legacy authentication protocols** (such as IMAP, SMTP, EAS,
-etc.) and highlights potential attack vectors.
-
-------------------------------------------------------------------------
-
-**🛠️ Script: Enumerate Legacy Authentication Usage**
-
-**✅ Requirements:**
+**Requirements:**
 
 - **Permissions**: Directory.Read.All, AuditLog.Read.All
-
 - **Admin consent** must be granted to run this script
 
-------------------------------------------------------------------------
-
-**🔹 Install the Required Module**
-
-Install-Module Microsoft.Graph -Scope CurrentUser
+Install the Required Module: `Install-Module Microsoft.Graph -Scope CurrentUser`
 
 ------------------------------------------------------------------------
 
