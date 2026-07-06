@@ -1,4 +1,6 @@
-# Credential exposure points in Azure
+# Credential exposure points
+
+## Credential exposure points in Azure
 
 - **App Config/Settings:** Web apps may store secrets in plain text settings.
 - **Azure Automation / Runbooks:** Credentials hardcoded or improperly secured in scripts.
@@ -10,61 +12,59 @@
 - **Log Analytics / Diagnostics Logs:** Debug logs may inadvertently capture credentials.
 - **VM Custom Script Extensions:** Scripts with embedded credentials may be stored in plain text.
 
-## Key Vault
+### Key Vault
 
-- Path: Azure🡪 Key Vaults 🡪 Vault Name 🡪 Secrets/Keys/Certificates
+- Path: `Azure🡪 Key Vaults 🡪 Vault Name 🡪 Secrets/Keys/Certificates`
 - Risk: Misconfigured access policies may allow unauthorized access to secrets. Poor access policies (RBAC or Access Policies) may allow unauthorized reads.
-- Risk severity: High🔸
+- Risk severity: *High* 🔸
 
-## Custom Script Extensions on VMs
+### Custom Script Extensions on VMs
 
 - Path: `Azure🡪 VMs 🡪 VM 🡪 Extensions + applications`
-- Risk Severity: High
+- Risk Severity: *High* 🔸
 - Risk: Scripts with hardcoded credentials are stored on disk, accessible to attackers. Scripts may contain hardcoded credentials; stored in /var/lib/waagent/ on Linux or C:\Packages\Plugins on Windows.
 
-## Run Command
+### Run Command
 
 - Path: `Azure 🡪 VM 🡪 Run command`
-- Risk Severity: High
+- Risk Severity: *High* 🔸
 - Risk: Secrets may be visible in command logs or audit history. Credentials passed via command may be logged in portal or command history.
 
-## App Service Settings
+### App Service Settings
 
 - Path: `Azure 🡪 App Services 🡪 Configuration 🡪 Application Settings`
 - Risk: Secrets in environment variables can be exposed via Kudu or code dumps. Secrets stored as plain text; accessible via Kudu or environment dump.
-- Risk Severity: Medium
+- Risk Severity: *Medium* 🔸
 
-## ARM Templates / Parameters
+### ARM Templates / Parameters
 
 - Path: `Deployments or Git Repos 🡪 templates (.json) / parameters (.json)` or `Stored in GitHub, DevOps repos, or ARM deployments under`
 - Risk: Hardcoded secrets may be exposed in source control (JSON/YAML) or deployment history.
-- Risk Severity: High
+- Risk Severity: *High* 🔸
 
-
-
-## Automation Accounts/Runbooks
+### Automation Accounts/Runbooks
 
 - Path: `Azure Automation 🡪 Automation Account 🡪 Runbooks / Credentials`
 - Risk: Hardcoded credentials or exposed variables in scripts pose leakage risk. Hardcoded credentials in PowerShell scripts or insecure use of stored credentials.
-- Risk Severity: High
+- Risk Severity: *High* 🔸
 
-## Azure Functions / Logic Apps
+### Azure Functions / Logic Apps
 
 - Path: `Function App 🡪 Configuration / Code + Test`
 - Risk: Environment variables or code may contain secrets directly. Secrets in environment variables, inline code, or bindings.
-- Risk Severity: High
+- Risk Severity: *High* 🔸
 
-## Azure Blob Storage
+### Azure Blob Storage
 
 - Path: `Storage Accounts 🡪 Containers / Files`
 - Risk: Credential files may be public or accessible with leaked SAS tokens. Blobs with sensitive data may be public or shared with SAS tokens.
-- Risk Severity: Critical
+- Risk Severity: *Critical* 🔸
 
-## Azure Monitor Logs / Log Analytics
+### Azure Monitor Logs / Log Analytics
 
 - Path: `Azure 🡪 Monitor 🡪 Logs / Log Analytics Workspaces`
 - Risk: Secrets may leak via diagnostic/debug logs or output from scripts. Logs may contain credentials from verbose script output.
-- Risk Severity: Medium
+- Risk Severity: *Medium* 🔸
 
 ## Azure DevOps
 
@@ -76,29 +76,19 @@
 - **Service Connections:** Improperly scoped or over-permissioned connections.
 - **Variable Groups:** Misconfigured access control can lead to credential leaks.
 
-| **Location / Feature** | **Path** | **Risk Severity** | **Risk Explanation** |
-| ---- | ---- | ---- | ---- |
-| **Pipeline Variables** | Pipelines 🡪 Pipeline Name 🡪 Edit 🡪 Variables | Medium | Non-secret variables may hold plaintext credentials and appear in logs. |
-| **Pipeline YAML Files** | Repos 🡪 Repo Name 🡪 \*.azure-pipelines.yml | High | Hardcoded secrets in YAML are visible in source control. |
-| **Service Connections** | Project Settings 🡪 Service Connections | High | Over-permissioned or stale connections may be abused by attackers. |
-| **Secure Files** | Library 🡪 Secure Files | Medium | Files uploaded here can be misused if permissions are too broad. |
-| **Variable Groups** | Library 🡪 Variable Groups | Medium | Variables may not be marked as secret; risk if reused across pipelines. |
-| **Build Artifacts & Logs** | Pipelines 🡪 Pipeline Run 🡪 Logs / Artifacts | Medium | Secrets may leak via debug output or logs. |
-| **Personal Access Tokens (PATs)** | User Settings 🡪 Personal Access Tokens | Critical | Compromise of a PAT can grant full access to projects, repos, and pipelines. |
-
 ### Pipeline Variables
 
-- Path: `Azure DevOps 🡪 **Pipelines** 🡪 *Pipeline Name* 🡪 **Edit 🡪 Variables**`
+- Path: `Azure DevOps 🡪 Pipelines 🡪 Pipeline Name 🡪 Edit Variables`
 - Risk: Non-secret variables can store credentials in plain text; exposed in logs.
 
 ### YAML Pipeline Files
 
-- Path: `Azure DevOps 🡪 **Repos** 🡪 *Repo Name* 🡪 *.azure-pipelines.yml*\`
+- Path: `Azure DevOps 🡪 Repos 🡪 Repo Name 🡪 .azure-pipelines.yml\`
 - Risk: Secrets hardcoded in YAML; visible in source control.
 
 ### Service Connections
 
-- Path: `Azure DevOps 🡪 **Project Settings** 🡪 **Service connections**`
+- Path: `Azure DevOps 🡪 Project Settings 🡪 Service connections`
 - Risk: Over-permissioned or outdated connections (e.g., Azure RM, GitHub, DockerHub).
 
 ### Secure Files
@@ -121,38 +111,31 @@
 - Path: `Azure DevOps 🡪 **User Settings** 🡪 **Personal Access Tokens**`
 - Risk:  Long-lived PATs or tokens shared insecurely can lead to account compromise.
 
-# Credential Storage Best Practices
+| **Location / Feature** | **Path** | **Risk Severity** | **Risk Explanation** |
+| ---- | ---- | ---- | ---- |
+| **Pipeline Variables** | Pipelines 🡪 Pipeline Name 🡪 Edit 🡪 Variables | Medium | Non-secret variables may hold plaintext credentials and appear in logs. |
+| **Pipeline YAML Files** | Repos 🡪 Repo Name 🡪 \*.azure-pipelines.yml | High | Hardcoded secrets in YAML are visible in source control. |
+| **Service Connections** | Project Settings 🡪 Service Connections | High | Over-permissioned or stale connections may be abused by attackers. |
+| **Secure Files** | Library 🡪 Secure Files | Medium | Files uploaded here can be misused if permissions are too broad. |
+| **Variable Groups** | Library 🡪 Variable Groups | Medium | Variables may not be marked as secret; risk if reused across pipelines. |
+| **Build Artifacts & Logs** | Pipelines 🡪 Pipeline Run 🡪 Logs / Artifacts | Medium | Secrets may leak via debug output or logs. |
+| **Personal Access Tokens (PATs)** | User Settings 🡪 Personal Access Tokens | Critical | Compromise of a PAT can grant full access to projects, repos, and pipelines. |
 
-Here’s a summary of **Credential Storage Best Practices** for both
-**Azure** and **Azure DevOps**, specifying **where not to store** and
-**where to store** credentials securely.
+## Credential Storage Best Practices
 
-## Where to Store Credentials (Secure Storage Options)
-
-**Azure**
+### Where to Store Credentials in Azure
 
 | **Method** | **Description** |
-|----|----|
+| ---- | ---- |
 | **Azure Key Vault** | Centralized, secure storage for secrets, keys, and certificates. Use access policies or RBAC. |
 | **Managed Identity** | Assign managed identities to services (VMs, Functions, etc.) to avoid using secrets entirely. |
 | **App Service → Key Vault References** | Use @Microsoft.KeyVault(...) syntax in app settings to securely reference secrets. |
 | **Azure AD Authentication** | Use token-based authentication (OAuth2, MSI) instead of password/API key authentication. |
 
-**Azure DevOps**
-
-| **Method** | **Description** |
-|----|----|
-| **Secret Pipeline Variables** | Mark variables as "secret" so they're masked in logs and not exposed in UI or YAML. |
-| **Azure Key Vault Task** | Use the Key Vault task in pipelines to securely fetch secrets at runtime. |
-| **Service Connections** | Use securely scoped service connections to authenticate to Azure and external services. |
-| **Secure Files (Library)** | Store sensitive files (SSH keys, certificates) securely with access restrictions. |
-
-## Where NOT to Store Credentials (Insecure Practices)
-
-**Azure**
+## Where NOT to Store Credentials in Azure (Insecure Practices)
 
 | **Insecure Location** | **Why It’s Risky** |
-|----|----|
+| ---- | ---- |
 | **Custom Script Extensions** | Scripts and parameters are stored on disk in plaintext, readable by users or attackers. |
 | **Run Command Input** | Commands and credentials passed via portal may be logged in audit history. |
 | **App Service Configuration (Unprotected)** | Plaintext environment variables can be dumped via Kudu console or app error. |
@@ -160,20 +143,29 @@ Here’s a summary of **Credential Storage Best Practices** for both
 | **Function or Logic App Code** | Secrets in code or bindings can be extracted or reversed. |
 | **Blob Storage (Public/Unsecured)** | Secrets stored in blobs may be accessed via public URLs or misused Shared Access Signatures. |
 
-**Azure DevOps**
+### Where to store credentials in **Azure DevOps**
+
+| **Method** | **Description** |
+| ---- | ---- |
+| **Secret Pipeline Variables** | Mark variables as "secret" so they're masked in logs and not exposed in UI or YAML. |
+| **Azure Key Vault Task** | Use the Key Vault task in pipelines to securely fetch secrets at runtime. |
+| **Service Connections** | Use securely scoped service connections to authenticate to Azure and external services. |
+| **Secure Files (Library)** | Store sensitive files (SSH keys, certificates) securely with access restrictions. |
+
+### Where not to store credentials in **Azure DevOps**
 
 | **Insecure Location** | **Why It’s Risky** |
-|----|----|
+| ---- | ---- |
 | **Plain Pipeline Variables** | Non-secret variables are exposed in UI and logs. |
 | **YAML Files in Repos** | Hardcoded credentials in .yml files are visible to anyone with repo access. |
 | **Build/Release Logs** | Secrets printed to logs (intentionally or not) are stored long-term and accessible. |
 | **Variable Groups (No RBAC)** | Broad access to variable groups allows leakage of secrets across teams. |
 | **Long-lived PATs in Scripts** | If compromised, long-lived PATs can grant full access to repos and pipelines. |
 
-**🔒 General Best Practices**
+## 🔒 General Best Practices
 
 | **Practice** | **Recommendation** |
-|----|----|
+| ---- | ---- |
 | **Use Key Vault as the primary store** | Avoid storing secrets in application code, templates, or environment settings. |
 | **Enable auditing/logging** | Monitor access to Key Vaults, pipelines, and storage to detect misuse. |
 | **Use RBAC & access policies** | Restrict who can access or update secrets, both in Azure and DevOps. |

