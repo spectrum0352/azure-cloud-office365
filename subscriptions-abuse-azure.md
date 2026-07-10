@@ -70,9 +70,3 @@ Identifying the right subscription, understanding role-based access
 controls (RBAC), and leveraging these roles for further exploitation can
 be key steps in gaining higher privileges or access to critical
 resources within Azure.
-
-<img src="media/image1.png" style="width:8.22571in;height:4.14203in" />
-
-## Roles
-
-<img src="media/image2.png" style="width:7.18396in;height:3.40029in" />
