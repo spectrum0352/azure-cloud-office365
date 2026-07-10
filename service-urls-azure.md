@@ -1,458 +1,435 @@
-# Azure - Service URL Patterns for Pentesting
+# Azure Service URLs Commonly Targeted During Cyber Attacks and Data Breaches
 
-These are **Azure service URL formats** commonly encountered during enumeration, misconfiguration testing, or passive recon.
-
-Azure Service URLs frequently used during attacks
-
-Attackers often interact with legitimate Azure service endpoints during reconnaissance, credential theft, privilege escalation, data exfiltration, command-and-control operations, and persistence activities. Monitoring access to these URLs and DNS suffixes can help identify suspicious behavior.
-
-## Use Cases
-
-- **Recon**: Identify public services by fuzzing known patterns (blob.core.windows.net, etc.).
-- **SSRF**: Leverage endpoint metadata services (`http://169.254.169.254/metadata/`) or storage.
-- **Privilege Escalation**: Target misconfigured function URLs or key vaults with public access.
-- **Exfiltration**: Abuse blob storage for staging or exfil via signed URLs (SAS).
-
-These tools and techniques help in testing for:
-
-- **Unsecured APIs and web interfaces** hosted on Azure services.
-- **Misconfigured subdomains or storage endpoints**.
-- **Lack of proper access controls or endpoint restrictions**, leading to potential data exposure or further pivoting opportunities.
-
-## All
-
-- Azure Container Instances (ACI): `https://\<container\>.region.azurecontainer.io`
-- Azure Kubernetes Service (AKS): (Typically internal unless public IP assigned; inspect Ingress or LoadBalancer IP)
-- CDN: `https://\<cdnendpoint\>.azureedge.net/`
-- API Management Gateway: `https://\<apiname\>.azure-api.net/\<api\>`
-- Event Hubs / Service Bus / IoT Hub:
-  - `sb://\<namespace\>.servicebus.windows.net/`
-  - `mqtt://\<hubname\>.azure-devices.net:8883`
-  - `https://\<hubname\>.azure-devices.net`
-- SignalR: `https://\<resource\>.service.signalr.net`
-- Azure Cognitive Search:`https://\<searchservice\>.search.windows.net`
-- Media Services: `https://\<account\>.restv2.\<region\>.media.azure.net`
-- Azure Monitor Logs / Application Insights (API): `https://api.applicationinsights.io/v1/apps/\<app_id\>`
-- Azure DevOps (Repos, Pipelines, Artifacts): `https://dev.azure.com/\<org\>/`
-- ARM Endpoint (for Azure Resource Manager API calls): `https://management.azure.com/`
-
-## Microsoft Entra ID
-
-Common URLs
-
-- `https://login.microsoftonline.com/tenant_id/oauth2/token`
-- `https://graph.windows.net/<tenant_id>` (legacy Azure AD Graph)
-- `https://graph.microsoft.com/v1.0/`
-- `https://management.core.windows.net`
-
-Attack Usage
-
-- Credential phishing targeting Microsoft 365 and Azure users.
-- Password spraying and brute-force authentication attempts.
-- OAuth consent grant abuse.
-- Enumeration of users, groups, applications, and service principals.
-- Access token theft and token replay attacks.
-- Privilege escalation through compromised administrative accounts.
-
-## Azure Resource Manager (ARM)
-
-- `https://management.azure.com`
-- `https://portal.azure.com`
-
-Attack Usage
-
-- Enumeration of Azure subscriptions and resources.
-- Creation of malicious resources for persistence.
-- Modification of network security groups and firewall rules.
-- Deployment of attacker-controlled virtual machines.
-- Discovery of storage accounts, Key Vaults, and managed identities.
-
-## Azure Cloud Shell
-
-- `https://shell.azure.com/`
-
-## Storage Accounts
-
-Common Endpoints
-
-- `https://<storage_account>.blob.core.windows.net/container/file`
-- `https://<storage_account>.file.core.windows.net/share`
-- `https://<storage_account>.queue.core.windows.net`
-- `https://<storage_account>.table.core.windows.net`
-
-Attack Usages
-
-- Discovery of publicly accessible containers.
-- Data exfiltration using compromised credentials or SAS tokens.
-- Malware hosting within storage containers.
-- Uploading malicious payloads for later execution.
-- Abuse of overly permissive access keys.
-
-High-Risk Indicators
-
-- Anonymous blob access.
-- Long-lived SAS tokens.
-- Access from unusual geographic locations.
-- Large-volume downloads.
-
-## Azure SQL Database
-
-Common Endpoint
-
-- `https://<server>.database.windows.net`
-- `tcp:<servername>.database.windows.net,1433`
-
-Attack Usage
-
-- Credential stuffing against exposed databases.
-- Exploitation of weak firewall configurations.
-- Data theft from misconfigured databases.
-- Unauthorized administrative access.
-
-High-Risk Indicators
-
-- Databases exposed to the Internet.
-- Excessive failed login attempts.
-- Unexpected outbound data transfers.
-
-## Key Vault
-
-Common Endpoint
-
-- `https://<vault-name>.vault.azure.net`
-
-Attack Usage
-
-- Theft of secrets, certificates, and encryption keys.
-- Credential harvesting for lateral movement.
-- Extraction of application secrets and API keys.
-- Abuse of excessive permissions granted to service principals.
-
-High-Risk Indicators
-
-- Secret enumeration activity.
-- Bulk secret retrieval operations.
-- Access from unfamiliar IP addresses.
+> **Purpose:**
+> This reference provides common Azure service URL patterns that are frequently observed during cloud reconnaissance, credential theft, privilege escalation, persistence, lateral movement, and data exfiltration activities. The URLs themselves are legitimate Microsoft Azure services; security risks arise when attackers abuse compromised credentials, exposed secrets, vulnerable applications, or misconfigurations.
 
 ---
 
-## Azure App Service
+## Table of Contents
 
-Common Endpoint
-
-- `https://<appname>.azurewebsites.net`
-
-Attack Usage
-
-- Exploitation of vulnerable web applications.
-- Web shell deployment.
-- Remote code execution attacks.
-- Credential theft through compromised applications.
-
-High-Risk Indicators
-
-- Suspicious file uploads.
-- Unexpected deployment activities.
-- Outbound connections to unknown domains.
-
-## Function apps
-
-Common Endpoints
-
-- `https://<functionname>.azurewebsites.net/api/<function>`
-
-## Azure Cosmos DB
-
-Common Endpoint
-
-- `https://<account>.documents.azure.com`
-- `https://\<account\>.documents.azure.com:443/`
-
-## MySQL/PostgreSQL/Flexible Server
-
-- `mysql:<servername>.mysql.database.azure.com`
-- `postgres:<servername>.postgres.database.azure.com`
-
-## Azure Redis Database
-
-Common Endpoints
-
-- `https://<name>.redis.cache.windows.net:6380`
-
-Attack Usage
-
-- Data theft through exposed keys.
-- Exploitation of misconfigured access controls.
-- Unauthorized database enumeration.
-
-## Service Bus and Event Hubs
-
-Common Endpoint
-
-- `*.servicebus.windows.net`
-
-Attack Usage
-
-- Interception or abuse of messaging infrastructure.
-- Data exfiltration through message queues.
-- Persistence through compromised applications.
-
-## Azure Automation
-
-Common Endpoint
-
-- `*.azure-automation.net`
-
-Attack Usage
-
-- Creation of malicious runbooks.
-- Scheduled execution of attacker-controlled scripts.
-- Persistence through automation tasks.
-
-## Azure API Management
-
-Common Endpoint
-
-- `*.azure-api.net`
-
-Attack Usage
-
-- Discovery of exposed APIs.
-- Abuse of weak authentication controls.
-- API key theft.
-- Data extraction through compromised APIs.
-
-## Azure IoT Hub
-
-Common Endpoint
-
-- `*.azure-devices.net`
-
-Attack Usage
-
-- Compromise of IoT devices.
-- Device impersonation.
-- Command injection against connected devices.
+* [Identity & Access Management](#1-identity--access-management)
+* [Compute Services](#2-compute-services)
+* [Storage Services](#3-storage-services)
+* [Database Services](#4-database-services)
+* [Secrets Management](#5-secrets-management)
+* [Messaging & Integration](#6-messaging--integration)
+* [API & Developer Services](#7-api--developer-services)
+* [Analytics & AI Services](#8-analytics--ai-services)
+* [Data Platform Services](#9-data-platform-services)
+* [Container & Kubernetes Services](#10-container--kubernetes-services)
+* [Automation & Orchestration](#11-automation--orchestration)
+* [Media & Content Delivery](#12-media--content-delivery)
+* [Azure Instance Metadata Service (IMDS)](#13-azure-instance-metadata-service-imds)
+* [Threat Hunting Recommendations](#14-threat-hunting-recommendations)
 
 ---
 
-## Azure Data Lake
+## 1. Identity & Access Management
+
+### Common URLs
+
+| Service                           | URL Pattern                                      |
+| --------------------------------- | ------------------------------------------------ |
+| Microsoft Entra ID Authentication | `https://login.microsoftonline.com/<tenant-id>/` |
+| Microsoft Graph API               | `https://graph.microsoft.com/`                   |
+| Microsoft Graph Beta              | `https://graph.microsoft.com/beta/`              |
+| Azure Resource Manager (ARM)      | `https://management.azure.com/`                  |
+| Azure Portal                      | `https://portal.azure.com/`                      |
+
+### Common Attack Activities
+
+* Password spraying
+* Credential stuffing
+* MFA fatigue attacks
+* OAuth consent grant abuse
+* Token theft and replay
+* User and group enumeration
+* Service principal enumeration
+* Privilege escalation through compromised administrators
+* Resource discovery using ARM APIs
 
-Common Endpoints
+---
 
-- `*.azuredatalakestore.net`
-- `*.azuredatalakeanalytics.net`
+## 2. Compute Services
 
-Attack Usage
+### Common URLs
 
-- Unauthorized access to large datasets.
-- Data exfiltration.
-- Reconnaissance of sensitive information repositories.
+| Service                         | URL Pattern                                      |
+| ------------------------------- | ------------------------------------------------ |
+| Azure App Service               | `https://<app>.azurewebsites.net`                |
+| Azure Function App              | `https://<app>.azurewebsites.net/api/<function>` |
+| Azure Container Instances (ACI) | `https://<container>.<region>.azurecontainer.io` |
+| Azure Virtual Machine DNS       | `<vm>.<region>.cloudapp.azure.com`               |
+| Azure Cloud Shell               | `https://shell.azure.com/`                       |
 
-## Azure Redis Cache
+### Common Attack Activities
 
-Common Endpoint
+* Web shell deployment
+* Remote code execution (RCE)
+* Credential theft
+* Abuse of managed identities
+* Malware hosting
+* Cryptocurrency mining
+* Lateral movement
 
-- `*.redis.cache.windows.net`
+---
 
-Attack Usage
+## 3. Storage Services
 
-- Access to cached credentials and session data.
-- Information disclosure through misconfigured caches.
-- Application compromise through stolen session tokens.
+### Common URLs
 
-## Azure Batch
+| Service                | URL Pattern                                 |
+| ---------------------- | ------------------------------------------- |
+| Blob Storage           | `https://<account>.blob.core.windows.net`   |
+| Azure Files            | `https://<account>.file.core.windows.net`   |
+| Queue Storage          | `https://<account>.queue.core.windows.net`  |
+| Table Storage          | `https://<account>.table.core.windows.net`  |
+| Data Lake Storage Gen2 | `https://<account>.dfs.core.windows.net`    |
+| Static Website Hosting | `https://<account>.z*.web.core.windows.net` |
+| Azure CDN              | `https://<endpoint>.azureedge.net`          |
 
-Common Endpoint
+### Common Attack Activities
 
-- `https://<region>.batch.azure.com`
+* Discovery of public containers
+* Data exfiltration
+* Malware hosting
+* Abuse of Storage Account Keys
+* Abuse of Shared Access Signatures (SAS)
+* Sensitive file theft
 
-Attack Usage
+### High-Risk Indicators
 
-- Abuse of compute resources for cryptocurrency mining.
-- Execution of malicious workloads.
-- Large-scale automated attacks.
+* Anonymous Blob access enabled
+* Long-lived SAS tokens
+* Excessive downloads
+* Access from unusual geographies
+* Storage key usage outside approved locations
 
-## Virtual machine
+---
 
-- **VM DNS (Public IP):** vmname.region.cloudapp.azure.com
+## 4. Database Services
 
-## Threat Hunting Recommendations
+### Common Endpoints
 
-Monitor connections, authentication attempts, and API activity involving:
+| Service                       | Endpoint                        |
+| ----------------------------- | ------------------------------- |
+| Azure SQL Database            | `*.database.windows.net`        |
+| Azure Cosmos DB               | `*.documents.azure.com`         |
+| Azure Database for PostgreSQL | `*.postgres.database.azure.com` |
+| Azure Database for MySQL      | `*.mysql.database.azure.com`    |
+| Azure Cache for Redis         | `*.redis.cache.windows.net`     |
 
-- `login.microsoftonline.com`
-- `management.azure.com`
-- `graph.microsoft.com`
-- `*.blob.core.windows.net`
-- `*.vault.azure.net`
-- `*.database.windows.net`
-- `*.azurewebsites.net`
-- `*.servicebus.windows.net`
-- `*.documents.azure.com`
+### Common Attack Activities
 
-Particular attention should be paid to:
+* Credential stuffing
+* Password brute forcing
+* Database dumping
+* Unauthorized administrative access
+* Data theft
+* Abuse of weak firewall rules
 
-- Unusual authentication patterns.
-- Access from unfamiliar countries or IP addresses.
-- Excessive use of SAS tokens.
-- Secret retrieval from Key Vault.
-- Large data transfers from Storage Accounts or Cosmos DB.
-- Creation of new resources through Azure Resource Manager APIs.
-- OAuth application consent grants.
-- Service principal creation and privilege assignments.
+### High-Risk Indicators
 
-These URLs themselves are legitimate Microsoft Azure services; the security concern arises when attackers abuse compromised credentials, misconfigurations, exposed secrets, or vulnerable applications to access them.
+* Internet-exposed databases
+* Excessive failed logins
+* Large outbound data transfers
+* Unexpected administrative changes
 
-# Azure Service URL Patterns for Pentesting
+---
 
-These are **Azure service URL formats** commonly encountered during enumeration, misconfiguration testing, or passive recon.
+## 5. Secrets Management
 
-## Storage & Content Delivery
+### Common URL
 
-- **Blob Storage -** https://\<account\>.blob.core.windows.net/\<container\>/\<file\>
-- **File Storage -** https:\\\<account\>.file.core.windows.net\\share\> (SMB)
-- **Queue Storage -** https://\<account\>.queue.core.windows.net/
-- **Table Storage -** https://\<account\>.table.core.windows.net/
-- **CDN -** https://\<cdnendpoint\>.azureedge.net/
+| Service         | URL Pattern                       |
+| --------------- | --------------------------------- |
+| Azure Key Vault | `https://<vault>.vault.azure.net` |
 
-## Compute & Networking
+### Common Attack Activities
 
-- **VM DNS (Public IP):** vmname.region.cloudapp.azure.com
-- **App Service (Web Apps / Functions):** https://\<appname\>.azurewebsites.net/
-- **Function App (API endpoint):** https://\<functionname\>.azurewebsites.net/api/\<function\>
-- **Azure Container Instances (ACI):** https://\<container\>.region.azurecontainer.io
-- **Azure Kubernetes Service (AKS):** (Typically internal unless public IP assigned; inspect Ingress or LoadBalancer IP)
+* Secret dumping
+* Certificate theft
+* API key theft
+* Credential harvesting
+* Lateral movement using retrieved secrets
 
-## Database Services
+### High-Risk Indicators
 
-- **Azure SQL Database:** tcp:\<servername\>.database.windows.net,1433
-- **CosmosDB:** https://\<account\>.documents.azure.com:443/
-- **MySQL/PostgreSQL/Flexible Server:**
-  - mysql:\<servername\>.mysql.database.azure.com
-  - postgres:\<servername\>.postgres.database.azure.com
-- **Redis:** \<name\>.redis.cache.windows.net:6380
+* Secret enumeration activity
+* Bulk secret retrieval
+* Access from unfamiliar IP addresses
+* Sudden increase in `SecretGet` operations
 
-## API, Messaging, IoT
+---
 
-- **API Management Gateway:** https://\<apiname\>.azure-api.net/\<api\>
-- **Event Hubs / Service Bus / IoT Hub**
-  - sb://\<namespace\>.servicebus.windows.net/
-  - mqtt://\<hubname\>.azure-devices.net:8883
-  - https://\<hubname\>.azure-devices.net
-- **SignalR**: https://\<resource\>.service.signalr.net
+## 6. Messaging & Integration
 
-## Search, Media, Analytics
+### Common URLs
 
-- **Azure Cognitive Search:** https://\<searchservice\>.search.windows.net
-- **Media Services:** https://\<account\>.restv2.\<region\>.media.azure.net
-- **Azure Monitor Logs / Application Insights (API):** https://api.applicationinsights.io/v1/apps/\<app_id\>
+| Service         | URL Pattern                |
+| --------------- | -------------------------- |
+| Service Bus     | `*.servicebus.windows.net` |
+| Event Hubs      | `*.servicebus.windows.net` |
+| IoT Hub         | `*.azure-devices.net`      |
+| SignalR Service | `*.service.signalr.net`    |
 
-## Identity & Access
+### Common Attack Activities
 
-- **Azure AD Login:** https://login.microsoftonline.com/\<tenant_id\>/oauth2/token
-- **Microsoft Graph API:** https://graph.microsoft.com/v1.0/
-- **Azure AD Graph (legacy):** https://graph.windows.net/\<tenant_id\>/
+* Queue abuse
+* Data interception
+* Device impersonation
+* Command injection
+* Covert data exfiltration
+* Persistence through messaging infrastructure
 
-## Developer Tools & Admin
+---
 
-- **Azure DevOps (Repos, Pipelines, Artifacts):** https://dev.azure.com/\<org\>/
-- **Cloud Shell (browser interface):** https://shell.azure.com/
-- **ARM Endpoint (for Azure Resource Manager API calls):** https://management.azure.com/
+## 7. API & Developer Services
 
-##  Use Cases in Pentesting:
+### Common URLs
 
-- **Recon**: Identify public services by fuzzing known patterns (blob.core.windows.net, etc.).
-- **SSRF**: Leverage endpoint metadata services (http://169.254.169.254/metadata/) or storage.
-- **Privilege Escalation**: Target misconfigured function URLs or key vaults with public access.
-- **Exfiltration**: Abuse blob storage for staging or exfil via signed URLs (SAS).
+| Service              | URL Pattern                            |
+| -------------------- | -------------------------------------- |
+| Azure API Management | `*.azure-api.net`                      |
+| Azure DevOps         | `https://dev.azure.com/<organization>` |
 
-## Insecure Interfaces and APIs
+### Common Attack Activities
 
-These tools and techniques help in testing for:
+* API enumeration
+* API key theft
+* Source code theft
+* Pipeline compromise
+* Personal Access Token (PAT) abuse
+* Supply chain attacks
 
-- **Unsecured APIs and web interfaces** hosted on Azure services.
-- **Misconfigured subdomains or storage endpoints**.
-- **Lack of proper access controls or endpoint restrictions**, leading to potential data exposure or further pivoting opportunities.
+---
 
-### Scan for Open Ports on Azure-Hosted Services (using cloudhunter.py)
+## 8. Analytics & AI Services
 
-below are **automated script templates** for each of the Azure PenTest tasks related to **Insecure Interfaces and APIs**. These can be integrated into your playbook or automation workflows.
+### Common URLs
 
-**File: azure_port_scan.sh**
+| Service                  | URL Pattern                                |
+| ------------------------ | ------------------------------------------ |
+| Azure AI Search          | `*.search.windows.net`                     |
+| Application Insights API | `https://api.applicationinsights.io`       |
+| Azure Monitor            | `https://management.azure.com/`            |
+| Azure AI Foundry         | `https://<resource>.services.ai.azure.com` |
 
-\#!/bin/bash
-TARGET=\$1
-if \[ -z "\$TARGET" \]; then
-echo "Usage: \$0 http://target-url"
-exit 1
-fi
+### Common Attack Activities
 
-python3 cloudhunter.py --write-test --open-only "\$TARGET"
+* Log reconnaissance
+* Search index enumeration
+* Data extraction
+* Abuse of AI endpoints
+* Monitoring configuration tampering
 
-**Usage**: ./azure_port_scan.sh http://myapp.azurewebsites.net
+---
 
-### Azure Subdomain & Endpoint Enumeration (using cf enum)
+## 9. Data Platform Services
 
-**File: azure_cf_enum.sh**
+### Common URLs
 
-\#!/bin/bash
+| Service                      | URL Pattern                     |
+| ---------------------------- | ------------------------------- |
+| Azure Data Lake Storage Gen2 | `*.dfs.core.windows.net`        |
+| Azure Synapse Analytics      | `*.dev.azuresynapse.net`        |
+| Azure Data Factory           | `https://management.azure.com/` |
 
-DOMAIN=\$1
+### Common Attack Activities
 
-if \[ -z "\$DOMAIN" \]; then
+* Data warehouse compromise
+* Data exfiltration
+* Pipeline abuse
+* Discovery of sensitive datasets
 
-echo "Usage: \$0 \<domain\>"
+---
 
-exit 1
+## 10. Container & Kubernetes Services
 
-fi
+### Common URLs
 
-cf enum "\$DOMAIN" \> "\${DOMAIN}\_cf_enum.txt"
+| Service                        | URL Pattern                    |
+| ------------------------------ | ------------------------------ |
+| Azure Kubernetes Service (AKS) | Public Ingress / Load Balancer |
+| Azure Container Registry (ACR) | `*.azurecr.io`                 |
 
-echo "\[+\] Results saved to \${DOMAIN}\_cf_enum.txt"
+### Common Attack Activities
 
-**Usage**: ./azure_cf_enum.sh contoso.com
+* Kubernetes cluster takeover
+* Container image poisoning
+* Supply chain compromise
+* Credential theft from containers
+* Secret extraction
 
-### Fuzz Azure API Endpoints (using ffuf)
+---
 
-**File: azure_api_fuzzer.sh**
+## 11. Automation & Orchestration
 
-\#!/bin/bash
+### Common URLs
 
-TARGET=\$1
+| Service          | URL Pattern                          |
+| ---------------- | ------------------------------------ |
+| Azure Automation | `*.azure-automation.net`             |
+| Logic Apps       | `https://<logicapp>.logic.azure.com` |
+| Azure Functions  | `*.azurewebsites.net`                |
 
-WORDLIST="/usr/share/seclists/Discovery/Web-Content/api.txt"
+### Common Attack Activities
 
-if \[ -z "\$TARGET" \]; then
+* Malicious runbook creation
+* Persistence mechanisms
+* Automated data exfiltration
+* Scheduled execution of attacker-controlled code
+* Privilege escalation through automation accounts
 
-echo "Usage: \$0 https://target-url"
+---
 
-exit 1
+## 12. Media & Content Delivery
 
-fi
+### Common URL of media
 
-ffuf -w "\$WORDLIST" -u "\$TARGET/FUZZ" -mc all -o ffuf_api_results.json
+| Service              | URL Pattern         |
+| -------------------- | ------------------- |
+| Azure Media Services | `*.media.azure.net` |
+| Azure CDN            | `*.azureedge.net`   |
 
-echo "\[+\] Fuzzing complete. Output saved to ffuf_api_results.json"
+### Common Attack Activities
 
-**Usage**: ./azure_api_fuzzer.sh https://api.contoso.com
+* Malware delivery
+* Unauthorized media access
+* Hosting attacker-controlled content
+* Payload staging
 
-### Brute-Force Azure Blob Containers (Modified AWS S3 Script)
+---
 
-**File: azure_blob_enum.py**
+## 13. Azure Instance Metadata Service (IMDS)
 
-\#!/usr/bin/env python3
-import requests
-account_name = "contoso" \# Customize this
-wordlist = "containers.txt" \# Each line: e.g., public, backup, logs
-with open(wordlist) as f:
-for container in f:
-container = container.strip()
-url =
-f"https://{account_name}.blob.core.windows.net/{container}?restype=container&comp=list"
-r = requests.get(url)
-if "PublicAccess" in r.text or r.status_code == 200:
-print(f"\[+\] Found public container: {container}")
+> One of the most commonly abused Azure services during cloud attacks.
 
-**Usage**: python3 azure_blob_enum.py (requires a containers.txt wordlist)
+### Endpoint
+
+```text
+http://169.254.169.254/metadata/
+```
+
+### Common Attack Activities
+
+* Server-Side Request Forgery (SSRF)
+* Managed Identity token theft
+* Privilege escalation
+* Subscription enumeration
+* Resource discovery
+
+### Example Metadata Request
+
+```http
+GET http://169.254.169.254/metadata/instance?api-version=2021-02-01
+Metadata: true
+```
+
+---
+
+## High-Value Azure Services Frequently Involved in Data Breaches
+
+### Identity
+
+* Microsoft Entra ID
+* Microsoft Graph
+* Azure Resource Manager
+
+### Secrets
+
+* Azure Key Vault
+
+### Storage
+
+* Azure Blob Storage
+* Azure Files
+* Data Lake Storage Gen2
+
+### Databases
+
+* Azure SQL Database
+* Cosmos DB
+* PostgreSQL
+* MySQL
+* Redis
+
+### Compute
+
+* App Service
+* Function Apps
+* Virtual Machines
+* Azure Kubernetes Service
+
+### Integration
+
+* Service Bus
+* Event Hubs
+* Logic Apps
+
+### Developer Platforms
+
+* Azure DevOps
+* API Management
+
+### Containers
+
+* Azure Container Registry
+* Azure Kubernetes Service
+
+### Analytics
+
+* Azure Monitor
+* Application Insights
+* Azure AI Search
+* Azure Synapse Analytics
+
+---
+
+## 14. Threat Hunting Recommendations
+
+Monitor authentication, API calls, and network traffic involving:
+
+```text
+login.microsoftonline.com
+graph.microsoft.com
+management.azure.com
+*.vault.azure.net
+*.blob.core.windows.net
+*.dfs.core.windows.net
+*.database.windows.net
+*.documents.azure.com
+*.azurewebsites.net
+*.servicebus.windows.net
+*.azure-api.net
+*.azurecr.io
+*.search.windows.net
+```
+
+### Investigate
+
+* Password spraying activity
+* OAuth consent grants
+* Service principal creation
+* Privilege assignment changes
+* Managed Identity token requests
+* Excessive Key Vault access
+* Large Storage Account downloads
+* Cosmos DB exports
+* Creation of new Azure resources
+* Unusual automation runbooks
+* Logic App workflow creation
+* AKS administrative changes
+
+### Data Exfiltration Indicators
+
+* Large outbound transfers
+* Excessive Blob downloads
+* Abnormal Data Lake access
+* Bulk Key Vault secret retrieval
+* High-volume Cosmos DB reads
+* Storage access from unfamiliar countries
+
+---
+
+> **Important:** These endpoints are legitimate Microsoft Azure services. Detection should focus on abnormal authentication patterns, unauthorized access attempts, unusual API activity, excessive data access, privilege changes, and suspicious resource creation rather than the URL alone.
